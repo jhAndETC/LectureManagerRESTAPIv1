@@ -1,25 +1,21 @@
 package hyundai.cc.usermanage.user.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.UUID;
 
-@Data
+
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateDTO {
+public class UserResponseDTO {
     private String id;
-    private String password;
     private String username;
     private String nickname;
-    private boolean enable;
-    //DB에 넣기 위함
-
+    private LocalDateTime createDate;
+    //사용자에게 보여지는 DTO (Controller)
 }

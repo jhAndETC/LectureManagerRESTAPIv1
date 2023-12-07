@@ -3,8 +3,7 @@ package hyundai.cc.usermanage.user.controller;
 
 import hyundai.cc.domain.Criteria;
 import hyundai.cc.domain.PageDTO;
-import hyundai.cc.usermanage.user.dto.UserCreateDTO;
-import hyundai.cc.usermanage.user.dto.UserDTO;
+import hyundai.cc.usermanage.user.dto.*;
 import hyundai.cc.usermanage.user.service.MockUserServiceImpl;
 import hyundai.cc.usermanage.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +24,17 @@ import java.util.Map;
 public class UserController {
 
     private final UserService service;
+    private final DTOMapper dtoMapper;
     @Autowired
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(MockUserServiceImpl service,DTOMapper dtoMapper) {
+        this.service = service;this.dtoMapper=dtoMapper;
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateDTO cuser) {
-        UserDTO user = service.createUser(cuser);
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateRequestDTO cuser) {
+        UserResponseDTO user =dtoMapper
+                .toUserResponseDTO(service.createUser(cuser));
+
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
@@ -50,20 +52,15 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
 
-    @GetMapping("/mypage")
-    public ResponseEntity<UserDTO> getUserDetail() {
-        //아이디는 세션에서 받아오기(예정)
-        //String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userId="fa6bb20a-4115-4852-b5a1-ba9bf3c5042f";
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDTO> getUserDetail(@PathVariable String userId) {
         UserDTO userDetail = service.getUserDetail(userId);
-        return ResponseEntity.ok(userDetail);
+        return ResponseEntity.ok(dtoMapper.toUserResponseDTO(userDetail));
     }
-    @PutMapping("/mypage/profile")
-    public ResponseEntity<?> updateUser(@RequestBody UserCreateDTO updateDTO) {
-        //String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userId="fa6bb20a-4115-4852-b5a1-ba9bf3c5042f";
-        UserDTO updateuser=service.updateUser(userId, updateDTO);
-        return ResponseEntity.ok(updateuser);
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @RequestBody UserCreateDTO updateDTO) {
+        UserDTO user=service.updateUser(userId,updateDTO);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/mypage/profile")

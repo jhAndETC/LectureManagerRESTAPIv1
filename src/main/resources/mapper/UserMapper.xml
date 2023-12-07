@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hyundai.cc.usermanage.user.mapper.UserMapper">
+    <select id="getUserList" resultType="hyundai.cc.usermanage.user.dto.UserDTO">-->
+    select id,
+           username,
+           nickname,
+           password,
+           createdate,
+           enable
+    from USER_INFO
+    where ID IS NOT NULL
+    </select>
+    <insert id="createUser" parameterType="hyundai.cc.usermanage.user.dto.UserCreateDTO">
+        INSERT INTO USER_INFO (
+            id,
+            username,
+            nickname,
+            password,
+            enable
+        ) VALUES (
+                     #{id},
+                     #{username},
+                     #{nickname},
+                     #{password},
+                     #{enable}
+                 )
+    </insert>
+
+</mapper>

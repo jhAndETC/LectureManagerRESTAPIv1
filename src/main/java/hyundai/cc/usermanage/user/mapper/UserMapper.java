@@ -6,6 +6,7 @@ import hyundai.cc.usermanage.user.dto.RoleVO;
 import hyundai.cc.usermanage.user.dto.UserCreateDTO;
 import hyundai.cc.usermanage.user.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.mapstruct.Named;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -19,11 +20,12 @@ import java.util.UUID;
 public interface UserMapper {
 
 
-    public UserDTO CreateUser(UserCreateDTO user);
+    public void createUser(UserCreateDTO user);
+    public ArrayList<UserDTO> getUserList();
     public ArrayList<UserDTO> getUsersByPage(Criteria cri);
-    public UserDTO getUserDetail(UserCreateDTO user);
-    public UserDTO UpdateUser(UserCreateDTO user);
-    public String DeleteUser(String userId);
+    public UserDTO getUserDetail(String userId);
+    public UserDTO updateUser(String userId,UserCreateDTO user);
+    public String deleteUser(String userId);
     public int getTotalCount(Criteria cri);
 
 }

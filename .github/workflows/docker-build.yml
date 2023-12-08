@@ -1,0 +1,39 @@
+name: Docker Image Build and Push
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/**'
+      - 'README.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    env:
+      IMAGE_NAME: mainforce/lecture-manager-restapi
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Repository
+      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+    - name: Define Image Tag
+      id: date
+      run: echo "::set-output name=tag::$(date +%s)"
+
+    - name: Build Docker Image
+      run: docker build -f Dockerfile --build-arg TARGETARCH=amd64 --tag ${{ env.IMAGE_NAME }}:${{ steps.date.outputs.tag }} .
+
+    - name: Push Docker Image with Timestamp Tag
+      run: docker push ${{ env.IMAGE_NAME }}:${{ steps.date.outputs.tag }}
+
+    - name: Tag Docker Image as Latest
+      run: docker tag ${{ env.IMAGE_NAME }}:${{ steps.date.outputs.tag }} ${{ env.IMAGE_NAME }}:latest
+
+    - name: Push Docker Image with Latest Tag
+      run: docker push ${{ env.IMAGE_NAME }}:latest

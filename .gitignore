@@ -36,3 +36,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+Wallet_DB20231211
+docker-compose.yml

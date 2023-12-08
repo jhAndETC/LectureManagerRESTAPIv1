@@ -32,9 +32,9 @@
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"
           p:driverClassName="oracle.jdbc.driver.OracleDriver"
-          p:jdbcUrl="jdbc:oracle:thin:@DB20231211_high?TNS_ADMIN=C:/dev/project01/Wallet_DB20231211"
-          p:username="admin"
-          p:password="jhAndETC20231211" />
+
+          p:jdbcUrl="jdbc:oracle:thin:admin/jhAndETC20231211@DB20231211_high"
+          />
 
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close"
           c:configuration-ref="hikariConfig" />

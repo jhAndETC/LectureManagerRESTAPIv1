@@ -76,8 +76,10 @@ public class UserController {
 //        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureService.getUserLecturesFinish(userId)));
 //    }
 //    @GetMapping("/{userId}/lectures/keep")
+//
+//
 //    @GetMapping("/{userId}/community/posts")
-
+//
 
 
     @PutMapping("/{userId}")

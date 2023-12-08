@@ -2,19 +2,14 @@ package hyundai.cc.usermanage.user.service;
 
 import hyundai.cc.domain.Criteria;
 import hyundai.cc.usermanage.user.dto.*;
-//import hyundai.cc.usermanage.user.mapper.MockUserMapperImpl;
-//import hyundai.cc.usermanage.user.exception.UserCreationException;
-import hyundai.cc.usermanage.user.exception.UserCreationException;
-import hyundai.cc.usermanage.user.exception.UserNotFoundException;
+import hyundai.cc.exception.UserCreationException;
+import hyundai.cc.exception.UserNotFoundException;
 import hyundai.cc.usermanage.user.mapper.UserMapper;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Log
@@ -22,9 +17,9 @@ import java.util.*;
 public class MockUserServiceImpl implements UserService{
     private final UserMapper mapper;
 
-    private final DTOMapper dtoMapper;
+    private final UserDTOMapper dtoMapper;
     @Autowired
-    public MockUserServiceImpl(UserMapper mapper,DTOMapper dtoMapper) {
+    public MockUserServiceImpl(UserMapper mapper,UserDTOMapper dtoMapper) {
         this.mapper = mapper; this.dtoMapper=dtoMapper;
     }
 

@@ -19,12 +19,14 @@ public class UserCreateRequestDTO {
     private String password;
 
     @NotEmpty(message = "Username should not be empty")
-    @Size(max = 50, message = "Username must be at most 50 characters")
+    @Size(max = 100, message = "Username must be at most 100 characters")
     private String username;
 
     @NotEmpty(message = "Nickname should not be empty")
     @Size(max = 50, message = "Nickname must be at most 50 characters")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Nickname can only contain letters and numbers")
     private String nickname;
+    @Size(max = 1000, message = "Username must be at most 50 characters")
+    private String introduction;
     //생성 요청 DTO (Controller)
 }

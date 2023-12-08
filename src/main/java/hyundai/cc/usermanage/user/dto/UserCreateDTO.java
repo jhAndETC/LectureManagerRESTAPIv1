@@ -16,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserCreateDTO {
     private String id;
+    private String email;
     private String password;
     private String username;
     private String nickname;

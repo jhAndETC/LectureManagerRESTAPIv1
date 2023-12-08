@@ -13,10 +13,10 @@ import java.util.UUID;
 
 public interface UserService {
     public UserDTO createUser(UserCreateRequestDTO user);
-    public ArrayList<UserDTO> getUserList();
+    public List<UserDTO> getUserList() ;
     public UserDTO getUserDetail(String UserId);
-    public UserDTO updateUser(String userId,UserCreateDTO user);
-    public String deleteUser(String UserId);
+    public UserDTO updateUser(String userId,UserCreateRequestDTO user);
+    public UserDTO deleteUser(String userId);
     public List<UserDTO> getUsersByPage(Criteria cri);
     public int getTotal(Criteria cri);
 

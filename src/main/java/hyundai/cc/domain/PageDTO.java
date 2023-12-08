@@ -1,6 +1,9 @@
 package hyundai.cc.domain;
 
+import hyundai.cc.usermanage.user.dto.UserResponseDTO;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class PageDTO {
@@ -8,6 +11,7 @@ public class PageDTO {
     private int startPage;
     private int endPage;
     private boolean prev, next;
+
 
     private int total;
     private Criteria cri;

@@ -5,15 +5,16 @@
 
 <mapper namespace="hyundai.cc.usermanage.user.mapper.UserMapper">
     <select id="getUserList" resultType="hyundai.cc.usermanage.user.dto.UserDTO">-->
-    select id,
+    select
+            id,
+           email,
            username,
            nickname,
-           password,
            createdate,
-           enable
+           content
     from USER_INFO
-    where ID IS NOT NULL
-    order by id
+    order by id desc
+
     </select>
     <insert id="createUser" parameterType="hyundai.cc.usermanage.user.dto.UserCreateDTO">
         INSERT INTO USER_INFO (
@@ -22,6 +23,7 @@
             username,
             nickname,
             password,
+            content,
             enable
         ) VALUES (
                      #{id},
@@ -29,13 +31,19 @@
                      #{username},
                      #{nickname},
                      #{password},
+                     #{content, jdbcType=VARCHAR},
                      #{enable}
                  )
     </insert>
 
 
     <select id="getUserDetail" parameterType="java.lang.String" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
-        SELECT *
+        SELECT  id,
+                email,
+                username,
+                nickname,
+                content,
+                createDate
         FROM USER_INFO
         WHERE ID = #{id}
     </select>
@@ -47,6 +55,7 @@
         SET
             USERNAME = #{user.username},
             NICKNAME = #{user.nickname},
+            CONTENT=#{user.content, jdbcType=VARCHAR},
             PASSWORD = #{user.password}
         WHERE ID = #{id}
         ]]>
@@ -60,11 +69,11 @@
     <select id="getUsersByPage" parameterType="hyundai.cc.domain.Criteria" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
         <![CDATA[
         select
-            id, username, nickname,password,createdate,enable
+            id, email, username, nickname,createdate,content,enable
         from
             (
                 select /*+ INDEX_DESC(USER_INFO pk_user_info) */
-                    rownum rn, id, username, nickname,password,createdate,enable
+                    rownum rn, id, username, email,nickname,createdate,content,enable
                 from
                     USER_INFO
                 where

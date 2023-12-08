@@ -1,25 +1,20 @@
 package hyundai.cc.usermanage.user.dto;
 
-import com.github.f4b6a3.ulid.Ulid;
 import com.github.f4b6a3.ulid.UlidCreator;
-import hyundai.cc.lecturemanage.lecture.dto.LectureDTO;
-import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Component
-public class DTOMapper {
+public class UserDTOMapper {
     public UserCreateDTO toUserCreateDTO(UserCreateRequestDTO userCreateRequestDTO) {
-        String id= UlidCreator.getMonotonicUlid().toString();
+        String id= UlidCreator.getUlid().toRfc4122().toUuid().toString();
         String password= new BCryptPasswordEncoder().encode(userCreateRequestDTO.getPassword());
         String email=userCreateRequestDTO.getEmail();
         String username=userCreateRequestDTO.getUsername();
         String nickname=userCreateRequestDTO.getNickname();
+        String content=userCreateRequestDTO.getContent();
         boolean enable=true;
 
 
@@ -29,6 +24,7 @@ public class DTOMapper {
                 password,
                 username,
                 nickname,
+                content,
                 enable
         );
     }
@@ -39,13 +35,15 @@ public class DTOMapper {
         String username=userDTO.getUsername();
         String nickname=userDTO.getNickname();
         LocalDateTime createDate=userDTO.getCreateDate();
+        String content=userDTO.getContent();
 
         return new UserResponseDTO(
                 id,
                 email,
                 username,
                 nickname,
-                createDate
+                createDate,
+                content
         );
 
     }

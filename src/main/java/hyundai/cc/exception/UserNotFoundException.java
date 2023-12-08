@@ -1,4 +1,4 @@
-package hyundai.cc.usermanage.user.exception;
+package hyundai.cc.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

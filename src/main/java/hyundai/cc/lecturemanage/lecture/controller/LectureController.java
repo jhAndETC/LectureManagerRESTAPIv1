@@ -1,33 +1,30 @@
 package hyundai.cc.lecturemanage.lecture.controller;
 
 
-import hyundai.cc.lecturemanage.lecture.dto.LectureCreateDTO;
-import hyundai.cc.lecturemanage.lecture.dto.LectureDTO;
+import hyundai.cc.lecturemanage.lecture.dto.*;
 import hyundai.cc.lecturemanage.lecture.service.LectureService;
 import hyundai.cc.lecturemanage.lecture.service.MockLectureServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("lectures")
 public class LectureController {
     private final LectureService service;
-    public LectureController(MockLectureServiceImpl service) {
+    private final LectureDTOMapper dtoMapper;
+    public LectureController(MockLectureServiceImpl service, LectureDTOMapper dtoMapper) {
         this.service = service;
+        this.dtoMapper = dtoMapper;
     }
     @PostMapping
-    public ResponseEntity<?> createLecture(@Valid @RequestBody LectureCreateDTO lec) {
-        LectureDTO lecture = service.createLecture(lec);
-        return new ResponseEntity<>(lecture,HttpStatus.CREATED);
+    public ResponseEntity<?> createLecture(String userId, @Valid @RequestBody LectureCreateRequestDTO lec) {
+        //LectureResponseDTO lecture = dtoMapper.toLectureResponsDTO(service.createLecture(lec));
+        return new ResponseEntity<>(lec,HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -53,18 +50,7 @@ public class LectureController {
         return ResponseEntity.ok(msg);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex
-    ) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
+
 
 
 

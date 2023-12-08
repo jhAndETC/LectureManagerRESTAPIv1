@@ -13,21 +13,75 @@
            enable
     from USER_INFO
     where ID IS NOT NULL
+    order by id
     </select>
     <insert id="createUser" parameterType="hyundai.cc.usermanage.user.dto.UserCreateDTO">
         INSERT INTO USER_INFO (
             id,
+            email,
             username,
             nickname,
             password,
             enable
         ) VALUES (
                      #{id},
+                     #{email},
                      #{username},
                      #{nickname},
                      #{password},
                      #{enable}
                  )
     </insert>
+
+
+    <select id="getUserDetail" parameterType="java.lang.String" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
+        SELECT *
+        FROM USER_INFO
+        WHERE ID = #{id}
+    </select>
+
+
+    <update id="updateUser">
+        <![CDATA[
+        UPDATE USER_INFO
+        SET
+            USERNAME = #{user.username},
+            NICKNAME = #{user.nickname},
+            PASSWORD = #{user.password}
+        WHERE ID = #{id}
+        ]]>
+    </update>
+
+    <delete id="deleteUser" parameterType="java.lang.String">
+        DELETE FROM USER_INFO WHERE ID = #{userId}
+    </delete>
+
+    <!-- READ -->
+    <select id="getUsersByPage" parameterType="hyundai.cc.domain.Criteria" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
+        <![CDATA[
+        select
+            id, username, nickname,password,createdate,enable
+        from
+            (
+                select /*+ INDEX_DESC(USER_INFO pk_user_info) */
+                    rownum rn, id, username, nickname,password,createdate,enable
+                from
+                    USER_INFO
+                where
+                    rownum <= #{pageNum} * #{amount}
+            )
+        where rn > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getTotalCount" parameterType="hyundai.cc.domain.Criteria" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM USER_INFO
+    </select>
+
+
+
+
+
+
 
 </mapper>

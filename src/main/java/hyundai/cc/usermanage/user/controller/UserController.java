@@ -9,15 +9,10 @@ import hyundai.cc.usermanage.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("users")
@@ -32,55 +27,41 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateRequestDTO cuser) {
-        UserResponseDTO user =dtoMapper
-                .toUserResponseDTO(service.createUser(cuser));
-
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        return new ResponseEntity<>(dtoMapper.toUserResponseDTO(service.createUser(cuser)),
+                HttpStatus.CREATED);
     }
 
     @GetMapping("/pages")
     public ResponseEntity<?> getUsersByPage(Criteria cri) {
-        List<UserDTO> userList = service.getUsersByPage(cri);
-        //PageDTO 추가 int total = service.getTotal(cri); new PageDTO(cri, total)
-        return new ResponseEntity<>(userList, HttpStatus.OK);
+        int total = service.getTotal(cri);
+        //new PageDTO(cri, total);
+        return new ResponseEntity<>(service.getUsersByPage(cri).stream()
+                .map(dtoMapper::toUserResponseDTO)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
 
     @GetMapping
-    public ResponseEntity<ArrayList<UserDTO>> getUserList() {
-        ArrayList<UserDTO> userList = service.getUserList();
-        return ResponseEntity.ok(userList);
+    public ResponseEntity<?> getUserList() {
+        return new ResponseEntity<>(service.getUserList().stream()
+                .map(dtoMapper::toUserResponseDTO)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDTO> getUserDetail(@PathVariable String userId) {
-        UserDTO userDetail = service.getUserDetail(userId);
-        return ResponseEntity.ok(dtoMapper.toUserResponseDTO(userDetail));
+        return ResponseEntity.ok(dtoMapper.toUserResponseDTO(service.getUserDetail(userId)));
     }
     @PutMapping("/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable String userId, @RequestBody UserCreateDTO updateDTO) {
-        UserDTO user=service.updateUser(userId,updateDTO);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @Valid @RequestBody UserCreateRequestDTO updateDTO) {
+        return ResponseEntity.ok(dtoMapper.toUserResponseDTO(service.updateUser(userId,updateDTO)));
     }
 
-    @DeleteMapping("/mypage/profile")
-    public ResponseEntity<?> deleteUser() {
-        //String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userId="fa6bb20a-4115-4852-b5a1-ba9bf3c5042f";
-        String msg=service.deleteUser(userId);
-        return ResponseEntity.ok(msg);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable String userId) {
+        return ResponseEntity.ok(dtoMapper.toUserResponseDTO(service.deleteUser(userId)));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex
-    ) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }
 }

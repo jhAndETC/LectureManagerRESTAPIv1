@@ -15,7 +15,7 @@ public class UserCreateDTO {
     private String password;
     private String username;
     private String nickname;
-    private String content;
+    private String introduction;
     private boolean enable;
     //DB에 넣기 위함
 

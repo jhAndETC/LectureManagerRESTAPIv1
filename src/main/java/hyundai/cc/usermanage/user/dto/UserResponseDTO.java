@@ -20,6 +20,6 @@ public class UserResponseDTO {
     private String nickname;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createDate;
-    private String content;
+    private String introduction;
     //사용자에게 보여지는 DTO (Controller)
 }

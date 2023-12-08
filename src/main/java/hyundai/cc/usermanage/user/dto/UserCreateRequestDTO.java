@@ -27,6 +27,6 @@ public class UserCreateRequestDTO {
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Nickname can only contain letters and numbers")
     private String nickname;
     @Size(max = 1000, message = "Username must be at most 50 characters")
-    private String content;
+    private String introduction;
     //생성 요청 DTO (Controller)
 }

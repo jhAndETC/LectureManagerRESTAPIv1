@@ -14,7 +14,7 @@ public class UserDTOMapper {
         String email=userCreateRequestDTO.getEmail();
         String username=userCreateRequestDTO.getUsername();
         String nickname=userCreateRequestDTO.getNickname();
-        String content=userCreateRequestDTO.getContent();
+        String content=userCreateRequestDTO.getIntroduction();
         boolean enable=true;
 
 

@@ -32,7 +32,7 @@
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"
           p:driverClassName="oracle.jdbc.driver.OracleDriver"
-          p:jdbcUrl="jdbc:oracle:thin:@DB20231211_high?TNS_ADMIN=C:/dev/project01/Wallet_DB20231211"
+          p:jdbcUrl="jdbc:oracle:thin:@DB20231211_high?TNS_ADMIN=/Users/mainforce/Home/Business/Genus/Project/LectureManagerRESTAPIv1/Wallet_DB20231211"
           p:username="admin"
           p:password="jhAndETC20231211" />
 

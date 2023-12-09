@@ -170,7 +170,7 @@
                 JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
                 JOIN USER_INFO u ON le.USER_ID = u.ID
         WHERE
-            li.USERID = '018c4855-582d-42d5-98bc-0c275242bdf0'
+            li.USERID = #{userid}
     </select>
 
 

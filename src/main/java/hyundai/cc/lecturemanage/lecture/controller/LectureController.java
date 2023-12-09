@@ -22,7 +22,7 @@ public class LectureController {
         this.dtoMapper = dtoMapper;
     }
     @PostMapping
-    public ResponseEntity<?> createLecture(String userId, @Valid @RequestBody LectureCreateRequestDTO lec) {
+    public ResponseEntity<?> createLecture(String userId, @Valid @RequestBody LectureCreateDTO lec) {
         //LectureResponseDTO lecture = dtoMapper.toLectureResponsDTO(service.createLecture(lec));
         return new ResponseEntity<>(lec,HttpStatus.CREATED);
     }

@@ -1,6 +1,7 @@
 package hyundai.cc.usermanage.user.service;
 
 import hyundai.cc.domain.Criteria;
+import hyundai.cc.lecturemanage.lecture.dto.LectureDTO;
 import hyundai.cc.usermanage.user.dto.*;
 import hyundai.cc.exception.UserCreationException;
 import hyundai.cc.exception.UserNotFoundException;
@@ -15,19 +16,20 @@ import java.util.*;
 @Log
 @Service
 public class MockUserServiceImpl implements UserService{
-    private final UserMapper mapper;
+    private final UserMapper usermapper;
 
-    private final UserDTOMapper dtoMapper;
+
+    private final UserDTOMapper userdtoMapper;
     @Autowired
     public MockUserServiceImpl(UserMapper mapper,UserDTOMapper dtoMapper) {
-        this.mapper = mapper; this.dtoMapper=dtoMapper;
+        this.usermapper = mapper; this.userdtoMapper=dtoMapper;
     }
 
     @Override
     public UserDTO createUser(UserCreateRequestDTO user){
-        UserCreateDTO userCreateDTO = dtoMapper.toUserCreateDTO(user);
+        UserCreateDTO userCreateDTO = userdtoMapper.toUserCreateDTO(user);
         try{
-            mapper.createUser(userCreateDTO);
+            usermapper.createUser(userCreateDTO);
         } catch (DataAccessException ex){
             throw new UserCreationException("Cannot create user");
         }
@@ -38,12 +40,12 @@ public class MockUserServiceImpl implements UserService{
     @Override
     public List<UserDTO> getUserList() {
         log.info("get all users....");
-        return mapper.getUserList();
+        return usermapper.getUserList();
     }
 
     @Override
     public UserDTO getUserDetail(String userid) {
-        UserDTO user=mapper.getUserDetail(userid);
+        UserDTO user=usermapper.getUserDetail(userid);
         if (user == null) {
             throw new UserNotFoundException("User not found with ID: " + userid);
         }
@@ -53,9 +55,9 @@ public class MockUserServiceImpl implements UserService{
     @Override
     public UserDTO updateUser(String userId,UserCreateRequestDTO user) {
         log.info("update user...." );
-        UserCreateDTO userCreateDTO = dtoMapper.toUserCreateDTO(user);
+        UserCreateDTO userCreateDTO = userdtoMapper.toUserCreateDTO(user);
         try{
-            mapper.updateUser(userId,userCreateDTO);
+            usermapper.updateUser(userId,userCreateDTO);
         } catch (DataAccessException ex){
             throw new UserCreationException("Cannot update user");
         }
@@ -66,17 +68,37 @@ public class MockUserServiceImpl implements UserService{
     public UserDTO deleteUser(String userid) {
         log.info("delete user...." + userid);
         UserDTO user=getUserDetail(userid);
-        mapper.deleteUser(userid);
+        usermapper.deleteUser(userid);
         return user;
     }
 
     @Override
     public List<UserDTO> getUsersByPage(Criteria cri) {
-        return mapper.getUsersByPage(cri);
+        return usermapper.getUsersByPage(cri);
     }
 
     @Override
     public int getTotal(Criteria cri) {
-        return mapper.getTotalCount(cri);
+        return usermapper.getTotalCount(cri);
     }
+
+    @Override
+    public List<LectureDTO> findProgressCourses(String userId) {
+        log.info("get user progress course....");
+        return usermapper.findProgressCourses(userId);
+    }
+
+    @Override
+    public List<LectureDTO> findFinishCourses(String userId) {
+        log.info("get user progress course....");
+        return usermapper.findFinishCourses(userId);
+    }
+
+    @Override
+    public List<LectureDTO> findLikedCourses(String userId) {
+        log.info("get user like course....");
+        return usermapper.findLikedCourses(userId);
+    }
+
+
 }

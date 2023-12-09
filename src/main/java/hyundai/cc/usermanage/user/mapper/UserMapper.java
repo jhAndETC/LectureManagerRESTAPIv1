@@ -2,6 +2,7 @@ package hyundai.cc.usermanage.user.mapper;
 
 
 import hyundai.cc.domain.Criteria;
+import hyundai.cc.lecturemanage.lecture.dto.LectureDTO;
 import hyundai.cc.usermanage.user.dto.RoleVO;
 import hyundai.cc.usermanage.user.dto.UserCreateDTO;
 import hyundai.cc.usermanage.user.dto.UserDTO;
@@ -29,5 +30,8 @@ public interface UserMapper {
     public void updateUser(@Param("id") String userId, @Param("user") UserCreateDTO user);
     public void deleteUser(String userId);
     public int getTotalCount(Criteria cri);
+    public List<LectureDTO> findProgressCourses(String UserId);
+    public List<LectureDTO> findFinishCourses(String UserId);
+    public List<LectureDTO> findLikedCourses(String UserId);
 
 }

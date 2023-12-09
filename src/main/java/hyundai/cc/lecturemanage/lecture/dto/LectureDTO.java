@@ -2,25 +2,29 @@ package hyundai.cc.lecturemanage.lecture.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class LectureDTO {
-    private Long lecturerId;
-    private Long categoryId;
-    private String categoryName;
+    //가져올때 쓴다
+    private Long lectureId;
     private String title;
+    private String lecturerId;
+    private String lecturerName;
+    private String lecturerIntroduction;
+    private String centerName;
     private String lectureTime;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int centerId;
-    private String location;
     private int lectureCount;
-    private int price;
+    private double price;
     private String description;
+    private Long categoryId;
 }

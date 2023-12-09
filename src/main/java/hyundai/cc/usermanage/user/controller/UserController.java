@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @RequestMapping("users")
 public class UserController {
 
-    //private final LectureService lectureService;
     private final UserService userservice;
     private final UserDTOMapper userdtoMapper;
     private final LectureDTOMapper lecturedtoMapper;
@@ -66,20 +65,36 @@ public class UserController {
         return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.getUserDetail(userId)));
     }
 
-//    @GetMapping("/{userId}/lectures/progress")
-//    public ResponseEntity<?> getUserLecturesProgress(@PathVariable String userId){
-//        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureService.getUserLecturesProgress(userId)));
-//    }
-//
-//    @GetMapping("/{userId}/lectures/finish")
-//    public ResponseEntity<?> getUserLecturesFinish(@PathVariable String userId){
-//        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureService.getUserLecturesFinish(userId)));
-//    }
-//    @GetMapping("/{userId}/lectures/keep")
-//
-//
+    @GetMapping("/{userId}/lectures/progress")
+    public ResponseEntity<?> findProgressCourses(@PathVariable String userId){
+        return new ResponseEntity<>(userservice.findProgressCourses(userId).stream()
+                .map(lecturedtoMapper::toLectureResponseDTO)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{userId}/lectures/finish")
+    public ResponseEntity<?> findFinishCourses(@PathVariable String userId){
+        return new ResponseEntity<>(userservice.findFinishCourses(userId).stream()
+                .map(lecturedtoMapper::toLectureResponseDTO)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+    @GetMapping("/{userId}/lectures/keep")
+    public ResponseEntity<?> findLikedCourses(@PathVariable String userId){
+        return new ResponseEntity<>(userservice.findLikedCourses(userId).stream()
+                .map(lecturedtoMapper::toLectureResponseDTO)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
+
+
 //    @GetMapping("/{userId}/community/posts")
-//
+//    public ResponseEntity<?> getUserCommunityList(@PathVariable String userId){
+//        return ResponseEntity.ok(lecturedtoMapper.toLectureListResponseDTO(lectureService.getUserLecturesKeep(userId)));
+//    }
+
 
 
     @PutMapping("/{userId}")

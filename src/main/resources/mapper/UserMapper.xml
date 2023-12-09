@@ -8,6 +8,7 @@
     select
             id,
            email,
+           PASSWORD,
            username,
            nickname,
            createdate,
@@ -40,6 +41,7 @@
     <select id="getUserDetail" parameterType="java.lang.String" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
         SELECT  id,
                 email,
+                PASSWORD,
                 username,
                 nickname,
                 content,
@@ -69,11 +71,11 @@
     <select id="getUsersByPage" parameterType="hyundai.cc.domain.Criteria" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
         <![CDATA[
         select
-            id, email, username, nickname,createdate,content,enable
+            id, email, PASSWORD,username, nickname,createdate,content,enable
         from
             (
                 select /*+ INDEX_DESC(USER_INFO pk_user_info) */
-                    rownum rn, id, username, email,nickname,createdate,content,enable
+                    rownum rn, id, username, email,PASSWORD,nickname,createdate,content,enable
                 from
                     USER_INFO
                 where
@@ -85,6 +87,90 @@
 
     <select id="getTotalCount" parameterType="hyundai.cc.domain.Criteria" resultType="java.lang.Integer">
         SELECT COUNT(id) FROM USER_INFO
+    </select>
+
+    <!-- 수강 중인 과목 조회 -->
+    <select id="findProgressCourses" parameterType="java.lang.String" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
+        SELECT
+        l.LECTUREID AS lectureId,
+        l.TITLE AS title,
+        l.LECTURERID AS lecturerId,
+        u.USERNAME AS lecturerName,
+        le.INTRODUCTION AS lecturerIntroduction,
+        c.NAME AS centerName,
+        l.LECTURETIME AS lectureTime,
+        l.LOCATION AS location,
+        l.STARTDATE AS startDate,
+        l.ENDDATE AS endDate,
+        l.LECTURECOUNT AS lectureCount,
+        l.PRICE AS price,
+        l.DESCRIPTION AS description,
+        l.CATEGORYID AS categoryId
+        FROM
+        ENROLLMENT e
+        INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
+        INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+        INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+        INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+        WHERE
+         e.USER_ID = #{userid}
+        AND e.IS_FINISHED = 0
+    </select>
+
+
+    <!-- 수강 완료한 과목 조회 -->
+    <select id="findFinishCourses" parameterType="java.lang.String" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
+        SELECT
+        l.LECTUREID AS lectureId,
+        l.TITLE AS title,
+        l.LECTURERID AS lecturerId,
+        u.USERNAME AS lecturerName,
+        le.INTRODUCTION AS lecturerIntroduction,
+        c.NAME AS centerName,
+        l.LECTURETIME AS lectureTime,
+        l.LOCATION AS location,
+        l.STARTDATE AS startDate,
+        l.ENDDATE AS endDate,
+        l.LECTURECOUNT AS lectureCount,
+        l.PRICE AS price,
+        l.DESCRIPTION AS description,
+        l.CATEGORYID AS categoryId
+        FROM
+        ENROLLMENT e
+        INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
+        INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+        INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+        INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+        WHERE
+            e.USER_ID = #{userid}
+            AND e.IS_FINISHED = 1
+    </select>
+
+    <!-- 좋아요 과목 조회 -->
+    <select id="findLikedCourses" parameterType="java.lang.String" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
+        SELECT
+            l.LECTUREID AS lectureId,
+            l.TITLE AS title,
+            l.LECTURERID AS lecturerId,
+            u.USERNAME AS lecturerName,
+            le.INTRODUCTION AS lecturerIntroduction,
+            c.NAME AS centerName,
+            l.LECTURETIME AS lectureTime,
+            l.LOCATION AS location,
+            l.STARTDATE AS startDate,
+            l.ENDDATE AS endDate,
+            l.LECTURECOUNT AS lectureCount,
+            l.PRICE AS price,
+            l.DESCRIPTION AS description,
+            l.CATEGORYID AS categoryId
+        FROM
+            LIKES li
+                JOIN LECTURE l ON li.LECTUREID = l.LECTUREID
+                JOIN LECTURER le ON l.LECTURERID = le.ID
+                JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+                JOIN USER_INFO u ON le.USER_ID = u.ID
+        WHERE
+            li.USERID = '018c4855-582d-42d5-98bc-0c275242bdf0'
     </select>
 
 

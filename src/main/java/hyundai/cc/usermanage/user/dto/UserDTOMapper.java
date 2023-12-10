@@ -29,6 +29,7 @@ public class UserDTOMapper {
         );
     }
 
+
     public UserResponseDTO toUserResponseDTO(UserDTO userDTO){
         String id=userDTO.getId();
         String email=userDTO.getEmail();
@@ -45,6 +46,27 @@ public class UserDTOMapper {
                 createDate,
                 content
         );
+
+    }
+
+    public UserCreateDTO FromUpdatetoUserCreateDTO(UserDTO userDTO,UserUpdateRequestDTO userUpdateRequestDTO){
+        String id=userDTO.getId();
+        String email=userDTO.getEmail();
+        String password= userUpdateRequestDTO.getPassword();
+        String username= userUpdateRequestDTO.getUsername();
+        String nickname=userUpdateRequestDTO.getNickname();
+        LocalDateTime createDate=userDTO.getCreateDate();
+        String content=userUpdateRequestDTO.getIntroduction();
+        boolean enable=userDTO.isEnable();
+
+        return new UserCreateDTO(
+                id,
+                email,
+                password,
+                username,
+                nickname,
+                content,
+                enable);
 
     }
 

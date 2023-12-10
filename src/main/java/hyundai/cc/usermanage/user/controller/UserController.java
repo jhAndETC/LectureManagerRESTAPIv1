@@ -43,8 +43,14 @@ public class UserController {
     @GetMapping("/pages")
     public ResponseEntity<?> getUsersByPage(Criteria cri) {
         int total = userservice.getTotal(cri);
-        HashMap<PageDTO, List<UserResponseDTO>> map=new HashMap<>();
-        map.put(new PageDTO(cri, total),userservice.getUsersByPage(cri).stream()
+        PageDTO page=new PageDTO(cri, total);
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("next",page.isNext());
+        map.put("prev",page.isPrev());
+        map.put("currentPage",cri.getPageNum());
+        map.put("itemsPerPage",cri.getAmount());
+        map.put("totalItems",total);
+        map.put("userlist",userservice.getUsersByPage(cri).stream()
                         .map(userdtoMapper::toUserResponseDTO)
                         .collect(Collectors.toList()));
         return new ResponseEntity<>(map,HttpStatus.OK);
@@ -98,7 +104,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable String userId, @Valid @RequestBody UserCreateRequestDTO updateDTO) {
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @Valid @RequestBody UserUpdateRequestDTO updateDTO) {
         return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.updateUser(userId,updateDTO)));
     }
 

@@ -53,11 +53,12 @@ public class MockUserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO updateUser(String userId,UserCreateRequestDTO user) {
+    public UserDTO updateUser(String userId,UserUpdateRequestDTO user) {
         log.info("update user...." );
-        UserCreateDTO userCreateDTO = userdtoMapper.toUserCreateDTO(user);
+        UserDTO userDTO=getUserDetail(userId);
+        UserCreateDTO updateUser=userdtoMapper.FromUpdatetoUserCreateDTO(userDTO,user);
         try{
-            usermapper.updateUser(userId,userCreateDTO);
+            usermapper.updateUser(userId,updateUser);
         } catch (DataAccessException ex){
             throw new UserCreationException("Cannot update user");
         }

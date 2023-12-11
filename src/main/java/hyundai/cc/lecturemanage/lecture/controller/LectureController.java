@@ -12,6 +12,7 @@
 //import org.springframework.web.bind.annotation.*;
 //
 //import javax.validation.Valid;
+//import java.util.ArrayList;
 //import java.util.HashMap;
 //import java.util.stream.Collectors;
 //
@@ -32,21 +33,23 @@
 //
 //
 //    //lecture 강의 목록
-//    @GetMapping
-//    public ResponseEntity<?> getLecturesByPage(Criteria cri) {
-//        int total = lectureservice.getTotal(cri);
-//        PageDTO page=new PageDTO(cri, total);
-//        HashMap<String,Object> map=new HashMap<>();
-//        map.put("next",page.isNext());
-//        map.put("prev",page.isPrev());
-//        map.put("currentPage",cri.getPageNum());
-//        map.put("itemsPerPage",cri.getAmount());
-//        map.put("totalItems",total);
-//        map.put("lecturelist",lectureservice.getLecturesByPage(cri).stream()
-//                .map(lecturedtoMapper::toLectureResponseDTO)
-//                .collect(Collectors.toList()));
-//        return new ResponseEntity<>(map,HttpStatus.OK);
-//    }
+////    @GetMapping
+////    public ResponseEntity<?> getLecturesByPage(Criteria cri) {
+////        int total = lectureservice.getTotal(cri);
+////        PageDTO page=new PageDTO(cri, total);
+////        HashMap<String,Object> map=new HashMap<>();
+////        map.put("next",page.isNext());
+////        map.put("prev",page.isPrev());
+////        //map.put("startpage",page.getStartPage());
+////        map.put("totalPages",page.getEndPage());
+////        map.put("currentPage",cri.getPageNum());
+////        map.put("itemsPerPage",cri.getAmount());
+////        map.put("totalItems",total);
+////        map.put("data",lectureservice.getLecturesByPage(cri).stream()
+////                .map(lecturedtoMapper::toLectureResponseDTO)
+////                .collect(Collectors.toList()));
+////        return new ResponseEntity<>(map,HttpStatus.OK);
+////    }
 //
 //
 //    //lectures/3 강의 소개
@@ -71,27 +74,25 @@
 //
 //    //admin/lectures
 //    @PostMapping
-//    public ResponseEntity<?> createLecture(String userId, @Valid @RequestBody LectureCreateDTO lec) {
-//        //LectureResponseDTO lecture = dtoMapper.toLectureResponsDTO(service.createLecture(lec));
-//        return new ResponseEntity<>(lec,HttpStatus.CREATED);
+//    public ResponseEntity<?> createLecture(String userId, @Valid @RequestBody LectureCreateRequestDTO lec) {
+//        return new ResponseEntity<>(lecturedtoMapper.toLectureResponseDTO(lectureservice.createLecture(lec)),HttpStatus.CREATED);
 //    }
 //    @PutMapping("/{lectureId}")
-//    public ResponseEntity<?> updateLecture(@PathVariable Long lectureId, @RequestBody LectureCreateDTO updateDTO) {
-//        LectureDTO updatelec=lectureservice.updateLecture(lectureId, updateDTO);
-//        return ResponseEntity.ok(updatelec);
+//    public ResponseEntity<?> updateLecture(@PathVariable Long lectureId, @RequestBody LectureCreateRequestDTO updateDTO) {
+//        return new ResponseEntity<>(lecturedtoMapper.toLectureResponseDTO(lectureservice.updateLecture(lectureId, updateDTO)),HttpStatus.CREATED);
 //    }
 //
 //    @DeleteMapping("/{lectureId}")
 //    public ResponseEntity<?> deleteLecture(@PathVariable Long lectureId) {
-//        String msg=lectureservice.deleteLecture(lectureId);
-//        return ResponseEntity.ok(msg);
+//        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.deleteLecture(lectureId)));
 //    }
 //
-//    //    @GetMapping
-////    public ResponseEntity<ArrayList<LectureDTO>> getLectureList() {
-////        ArrayList<LectureDTO> lectureList = lectureservice.getLectureList();
-////        return ResponseEntity.ok(lectureList);
-////    }
+//    @GetMapping
+//    public ResponseEntity<?> getLectureList() {
+//        return new ResponseEntity<>(lectureservice.getLecturesList().stream()
+//                .map(lecturedtoMapper::toLectureResponseDTO)
+//                .collect(Collectors.toList()),HttpStatus.OK);
+//    }
 //
 //
 //

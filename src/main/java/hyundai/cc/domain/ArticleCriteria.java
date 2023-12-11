@@ -6,13 +6,13 @@ import lombok.Data;
 @Data
 public class ArticleCriteria {
     private Long lectureId;
-    private int offset;
-    private int limit;
+    private Integer cursor;
+    private Integer amount;
 
     @Builder
-    public ArticleCriteria(Long lectureId, int offset, int limit){
+    public ArticleCriteria(Long lectureId, Integer cursor, Integer amount){
         this.lectureId = lectureId;
-        this.offset = offset;
-        this.limit = limit;
+        this.cursor = cursor;
+        this.amount = amount;
     }
 }

@@ -40,13 +40,15 @@ public class UserController {
     }
 
     //admin 권한
-    @GetMapping("/pages")
+    @GetMapping
     public ResponseEntity<?> getUsersByPage(Criteria cri) {
         int total = userservice.getTotal(cri);
         PageDTO page=new PageDTO(cri, total);
         HashMap<String,Object> map=new HashMap<>();
         map.put("next",page.isNext());
         map.put("prev",page.isPrev());
+        //map.put("startpage",page.getStartPage());
+        map.put("endpage",page.getEndPage());
         map.put("currentPage",cri.getPageNum());
         map.put("itemsPerPage",cri.getAmount());
         map.put("totalItems",total);
@@ -57,13 +59,13 @@ public class UserController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<?> getUserList() {
-        return new ResponseEntity<>(userservice.getUserList().stream()
-                .map(userdtoMapper::toUserResponseDTO)
-                .collect(Collectors.toList()),
-                HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<?> getUserList() {
+//        return new ResponseEntity<>(userservice.getUserList().stream()
+//                .map(userdtoMapper::toUserResponseDTO)
+//                .collect(Collectors.toList()),
+//                HttpStatus.OK);
+//    }
 
 
     @GetMapping("/{userId}")

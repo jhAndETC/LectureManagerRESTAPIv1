@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Component
 public class UserDTOMapper {
@@ -15,6 +16,8 @@ public class UserDTOMapper {
         String username=userCreateRequestDTO.getUsername();
         String nickname=userCreateRequestDTO.getNickname();
         String content=userCreateRequestDTO.getIntroduction();
+        content=(content != null && content.length() > 0) ? content : " ";
+
         boolean enable=true;
 
 
@@ -55,8 +58,8 @@ public class UserDTOMapper {
         String password= userUpdateRequestDTO.getPassword();
         String username= userUpdateRequestDTO.getUsername();
         String nickname=userUpdateRequestDTO.getNickname();
-        LocalDateTime createDate=userDTO.getCreateDate();
         String content=userUpdateRequestDTO.getIntroduction();
+        content=(content != null && content.length() > 0) ? content : " ";
         boolean enable=userDTO.isEnable();
 
         return new UserCreateDTO(

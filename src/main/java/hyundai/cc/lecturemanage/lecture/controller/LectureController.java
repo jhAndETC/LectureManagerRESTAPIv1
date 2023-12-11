@@ -40,7 +40,7 @@
 //        map.put("currentPage",cri.getPageNum());
 //        map.put("itemsPerPage",cri.getAmount());
 //        map.put("totalItems",total);
-//        map.put("userlist",lectureservice.getLecturesByPage(cri).stream()
+//        map.put("lecturelist",lectureservice.getLecturesByPage(cri).stream()
 //                .map(lecturedtoMapper::toLectureResponseDTO)
 //                .collect(Collectors.toList()));
 //        return new ResponseEntity<>(map,HttpStatus.OK);
@@ -54,10 +54,10 @@
 //    }
 //
 //    //lectures/3/lecturer 강사소개
-//    @GetMapping("/{lectureId}/lecturer")
-//    public ResponseEntity<?> getLectureLecturer(@PathVariable Long lectureId) {
-//        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.getLectureLecturer(lectureId)));
-//    }
+////    @GetMapping("/{lectureId}/lecturer")
+////    public ResponseEntity<?> getLectureLecturer(@PathVariable Long lectureId) {
+////        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.getLectureLecturer(lectureId)));
+////    }
 //
 //
 //    //lectures/3/community 강의 커뮤니티

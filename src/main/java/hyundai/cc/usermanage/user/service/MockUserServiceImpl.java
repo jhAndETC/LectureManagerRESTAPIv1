@@ -18,7 +18,6 @@ import java.util.*;
 public class MockUserServiceImpl implements UserService{
     private final UserMapper usermapper;
 
-
     private final UserDTOMapper userdtoMapper;
     @Autowired
     public MockUserServiceImpl(UserMapper mapper,UserDTOMapper dtoMapper) {

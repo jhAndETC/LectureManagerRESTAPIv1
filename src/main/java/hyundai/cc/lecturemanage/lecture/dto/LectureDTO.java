@@ -18,7 +18,7 @@ public class LectureDTO {
     private String title;
     private String lecturerId;
     private String lecturerName;
-    private String lecturerIntroduction;
+//    private String lecturerIntroduction;
     private String centerName;
     private String lectureTime;
     private LocalDate startDate;

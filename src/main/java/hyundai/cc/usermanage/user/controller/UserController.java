@@ -48,11 +48,11 @@ public class UserController {
         map.put("next",page.isNext());
         map.put("prev",page.isPrev());
         //map.put("startpage",page.getStartPage());
-        map.put("endpage",page.getEndPage());
+        map.put("totalPage",page.getEndPage());
         map.put("currentPage",cri.getPageNum());
         map.put("itemsPerPage",cri.getAmount());
         map.put("totalItems",total);
-        map.put("userlist",userservice.getUsersByPage(cri).stream()
+        map.put("data",userservice.getUsersByPage(cri).stream()
                         .map(userdtoMapper::toUserResponseDTO)
                         .collect(Collectors.toList()));
         return new ResponseEntity<>(map,HttpStatus.OK);

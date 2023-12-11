@@ -6,12 +6,12 @@
 //import hyundai.cc.lecturemanage.lecture.dto.*;
 //import hyundai.cc.lecturemanage.lecture.service.LectureService;
 //import hyundai.cc.lecturemanage.lecture.service.MockLectureServiceImpl;
+//import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTOMapper;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.*;
 //
 //import javax.validation.Valid;
-//import java.util.ArrayList;
 //import java.util.HashMap;
 //import java.util.stream.Collectors;
 //
@@ -21,9 +21,11 @@
 //public class LectureController {
 //    private final LectureService lectureservice;
 //    private final LectureDTOMapper lecturedtoMapper;
-//    public LectureController(MockLectureServiceImpl lectureservice, LectureDTOMapper lecturedtoMapper) {
+//    private final LecturerDTOMapper lecturerDTOMapper;
+//    public LectureController(MockLectureServiceImpl lectureservice, LectureDTOMapper lecturedtoMapper, LecturerDTOMapper lecturerDTOMapper) {
 //        this.lectureservice = lectureservice;
 //        this.lecturedtoMapper = lecturedtoMapper;
+//        this.lecturerDTOMapper = lecturerDTOMapper;
 //    }
 //
 //
@@ -54,10 +56,10 @@
 //    }
 //
 //    //lectures/3/lecturer 강사소개
-////    @GetMapping("/{lectureId}/lecturer")
-////    public ResponseEntity<?> getLectureLecturer(@PathVariable Long lectureId) {
-////        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.getLectureLecturer(lectureId)));
-////    }
+//    @GetMapping("/{lectureId}/lecturer")
+//    public ResponseEntity<?> getLectureLecturer(@PathVariable Long lectureId) {
+//        return ResponseEntity.ok(lecturerDTOMapper.toLecturerResponseDTO(lectureservice.getLectureLecturer(lectureId)));
+//    }
 //
 //
 //    //lectures/3/community 강의 커뮤니티

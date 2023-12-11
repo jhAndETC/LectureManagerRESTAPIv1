@@ -10,5 +10,7 @@ import java.util.Map;
 public interface ArticleMapper {
     public List<ArticleDTO> getAllArticleList() throws SQLException;
     public List<ArticleDTO> getArticleListByLectureWithPagination(ArticleCriteria articleCriteria) throws SQLException;
+    public List<ArticleDTO> getArticleListByLectureWithPaginationFirst(ArticleCriteria articleCriteria) throws SQLException;
     public ArticleDTO getArticleDetail(long articleId) throws SQLException;
+    public int getTotal(long lectureId) throws SQLException;
 }

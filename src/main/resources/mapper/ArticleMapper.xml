@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hyundai.cc.articlemanage.article.mapper.ArticleMapper">
+    <select id="getAllArticleList" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
+    select a.articleId, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
+        nvl(f.URL, 'file null') as fileUrl,
+        nvl(u.NICKNAME, 'nickname null') as writerNickname,
+        nvl(l.TITLE, 'lecture title null') as lectureTitle
+    from article a
+    left outer join FILE_INFO f on a.FILEID = f.FILEID
+    left outer join USER_INFO u on a.WRITERID = u.id
+    left outer join LECTURE l on a.lectureid = l.LECTUREID
+    order by ARTICLEID desc
+    </select>
+
+</mapper>

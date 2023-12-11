@@ -16,9 +16,9 @@
 
     <!-- Component scan to detect Spring components -->
     <context:component-scan base-package="hyundai.cc" />
-<!--    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
+    <!--    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
 
-<!--    &lt;!&ndash; Enable Spring MVC annotation-driven configuration &ndash;&gt;-->
+    <!--    &lt;!&ndash; Enable Spring MVC annotation-driven configuration &ndash;&gt;-->
     <mvc:annotation-driven/>
 
     <!-- Define message converters for JSON -->
@@ -31,28 +31,21 @@
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"
-          p:driverClassName="oracle.jdbc.driver.OracleDriver"
-
-          p:jdbcUrl="jdbc:oracle:thin:admin/jhAndETC20231211@DB20231211_high"
-          />
+          p:driverClassName="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"
+          p:jdbcUrl="jdbc:log4jdbc:oracle:thin:admin/jhAndETC20231211@DB20231211_high"
+    />
 
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close"
           c:configuration-ref="hikariConfig" />
 
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="mapperLocations" value="classpath:mapper/UserMapper.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
 
     </bean>
 
 
-    <mybatis-spring:scan
-    base-package="hyundai.cc.usermanage.user.mapper" />
-
-
-
-
-
+    <mybatis-spring:scan base-package="hyundai.cc.usermanage.user.mapper, hyundai.cc.articlemanage.article.mapper" />
 
 </beans>

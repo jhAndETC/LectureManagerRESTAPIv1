@@ -11,7 +11,7 @@ public class LectureDTOMapper {
         Long lectureId=LectureDTO.getLectureId();
         String title=LectureDTO.getTitle();
         String lecturerName=LectureDTO.getLecturerName();
-        String lecturerIntroduction=LectureDTO.getLecturerIntroduction();
+//        String lecturerIntroduction=LectureDTO.getLecturerIntroduction();
         String centerName=LectureDTO.getCenterName();
         String lectureTime= LectureDTO.getLectureTime();
         LocalDate startDate=LectureDTO.getStartDate();
@@ -23,7 +23,6 @@ public class LectureDTOMapper {
                 lectureId,
                 title,
                 lecturerName,
-                lecturerIntroduction,
                 centerName,
                 lectureTime,
                 startDate,

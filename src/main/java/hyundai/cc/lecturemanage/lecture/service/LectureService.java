@@ -4,6 +4,7 @@ package hyundai.cc.lecturemanage.lecture.service;
 import hyundai.cc.domain.Criteria;
 import hyundai.cc.lecturemanage.lecture.dto.LectureCreateDTO;
 import hyundai.cc.lecturemanage.lecture.dto.LectureDTO;
+import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTO;
 
 import java.util.List;
 
@@ -15,7 +16,5 @@ public interface LectureService {
     public String deleteLecture(Long lectureId);
     public int getTotal(Criteria cri);
     public List<LectureDTO> getLecturesByPage(Criteria cri);
-
-
-
+    public LecturerDTO getLectureLecturer(Long lectureId);
 }

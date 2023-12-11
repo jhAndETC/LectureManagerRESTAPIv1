@@ -5,6 +5,7 @@
 //import hyundai.cc.lecturemanage.lecture.dto.LectureDTO;
 //import hyundai.cc.lecturemanage.lecture.dto.LectureDTOMapper;
 //import hyundai.cc.lecturemanage.lecture.mapper.LectureMapper;
+//import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTO;
 //import lombok.extern.java.Log;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Service;
@@ -57,5 +58,10 @@
 //    @Override
 //    public List<LectureDTO> getLecturesByPage(Criteria cri) {
 //        return lectureMapper.getLecturesByPage(cri);
+//    }
+//
+//    @Override
+//    public LecturerDTO getLectureLecturer(Long lectureId) {
+//        return null;
 //    }
 //}

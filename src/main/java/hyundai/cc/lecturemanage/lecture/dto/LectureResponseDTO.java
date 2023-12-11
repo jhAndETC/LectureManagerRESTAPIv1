@@ -17,7 +17,7 @@ public class LectureResponseDTO {
     private Long lectureId;
     private String title;
     private String lecturerName;
-    private String lecturerIntroduction;
+//    private String lecturerIntroduction;
     private String centerName;
     private String lectureTime;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

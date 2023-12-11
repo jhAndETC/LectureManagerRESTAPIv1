@@ -48,7 +48,7 @@ public class UserController {
         map.put("next",page.isNext());
         map.put("prev",page.isPrev());
         //map.put("startpage",page.getStartPage());
-        map.put("totalPage",page.getEndPage());
+        map.put("totalPages",page.getEndPage());
         map.put("currentPage",cri.getPageNum());
         map.put("itemsPerPage",cri.getAmount());
         map.put("totalItems",total);

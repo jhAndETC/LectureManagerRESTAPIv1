@@ -81,23 +81,36 @@ public class MockUserServiceImpl implements UserService{
     public int getTotal(Criteria cri) {
         return usermapper.getTotalCount(cri);
     }
+    @Override
+    public int getProgressCount(String userId,Criteria cri) {
+        return usermapper.getProgressCount(userId,cri);
+    }
+    @Override
+    public int getFinishCount(String userId,Criteria cri) {
+        return usermapper.getFinishCount(userId,cri);
+    }
+    @Override
+    public int getLikedCount(String userId,Criteria cri) {
+        return usermapper.getLikedCount(userId,cri);
+    }
+
 
     @Override
-    public List<LectureDTO> findProgressCourses(String userId) {
+    public List<LectureDTO> findProgressCourses(String userId,Criteria cri) {
         log.info("get user progress course....");
-        return usermapper.findProgressCourses(userId);
+        return usermapper.findProgressCourses(userId,cri);
     }
 
     @Override
-    public List<LectureDTO> findFinishCourses(String userId) {
+    public List<LectureDTO> findFinishCourses(String userId,Criteria cri) {
         log.info("get user progress course....");
-        return usermapper.findFinishCourses(userId);
+        return usermapper.findFinishCourses(userId,cri);
     }
 
     @Override
-    public List<LectureDTO> findLikedCourses(String userId) {
+    public List<LectureDTO> findLikedCourses(String userId,Criteria cri) {
         log.info("get user like course....");
-        return usermapper.findLikedCourses(userId);
+        return usermapper.findLikedCourses(userId,cri);
     }
 
 

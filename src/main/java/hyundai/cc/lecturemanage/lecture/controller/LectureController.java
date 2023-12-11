@@ -3,7 +3,8 @@
 //
 //import hyundai.cc.domain.Criteria;
 //import hyundai.cc.domain.PageDTO;
-//import hyundai.cc.lecturemanage.lecture.dto.*;
+//import hyundai.cc.lecturemanage.lecture.dto.LectureCreateRequestDTO;
+//import hyundai.cc.lecturemanage.lecture.dto.LectureDTOMapper;
 //import hyundai.cc.lecturemanage.lecture.service.LectureService;
 //import hyundai.cc.lecturemanage.lecture.service.MockLectureServiceImpl;
 //import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTOMapper;

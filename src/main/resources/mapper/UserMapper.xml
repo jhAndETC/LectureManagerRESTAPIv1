@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="hyundai.cc.usermanage.user.mapper.UserMapper">
+
     <select id="getUserList" resultType="hyundai.cc.usermanage.user.dto.UserDTO">-->
     select
             id,
@@ -96,8 +97,50 @@
         SELECT COUNT(id) FROM USER_INFO
     </select>
 
+    <select id="getProgressCount" resultType="java.lang.Integer">
+        SELECT COUNT(l.LECTUREID)
+        FROM
+            ENROLLMENT e
+                INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
+                INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+                INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+                INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+        WHERE
+            e.USER_ID = #{id}
+          AND e.IS_FINISHED = 0
+    </select>
+
+    <select id="getFinishCount" resultType="java.lang.Integer">
+        SELECT COUNT(l.LECTUREID)
+        FROM
+            ENROLLMENT e
+                INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
+                INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+                INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+                INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+        WHERE
+            e.USER_ID = #{id}
+          AND e.IS_FINISHED = 1
+    </select>
+    <select id="getLikedCount" resultType="java.lang.Integer">
+        SELECT COUNT(l.LECTUREID)
+        FROM
+            LIKES li
+                JOIN LECTURE l ON li.LECTUREID = l.LECTUREID
+                JOIN LECTURER le ON l.LECTURERID = le.ID
+                JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+                JOIN USER_INFO u ON le.USER_ID = u.ID
+        WHERE
+            li.USERID = #{id}
+    </select>
+
+
+
+
+
+
     <!-- 수강 중인 과목 조회 -->
-    <select id="findProgressCourses" parameterType="java.lang.String" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
+    <select id="findProgressCourses" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
         SELECT
         l.LECTUREID AS lectureId,
         l.TITLE AS title,
@@ -120,13 +163,15 @@
         INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
         INNER JOIN USER_INFO u ON le.USER_ID = u.ID
         WHERE
-         e.USER_ID = #{userid}
+         e.USER_ID = #{id}
         AND e.IS_FINISHED = 0
+        order by l.LECTUREID
+        offset (#{cri.pageNum}-1) * #{cri.amount} ROWS FETCH NEXT #{cri.amount} ROWS ONLY
     </select>
 
 
     <!-- 수강 완료한 과목 조회 -->
-    <select id="findFinishCourses" parameterType="java.lang.String" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
+    <select id="findFinishCourses" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
         SELECT
         l.LECTUREID AS lectureId,
         l.TITLE AS title,
@@ -149,12 +194,14 @@
         INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
         INNER JOIN USER_INFO u ON le.USER_ID = u.ID
         WHERE
-            e.USER_ID = #{userid}
+            e.USER_ID = #{id}
             AND e.IS_FINISHED = 1
+        order by l.LECTUREID
+        offset (#{cri.pageNum}-1) * #{cri.amount} ROWS FETCH NEXT #{cri.amount} ROWS ONLY
     </select>
 
     <!-- 좋아요 과목 조회 -->
-    <select id="findLikedCourses" parameterType="java.lang.String" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
+    <select id="findLikedCourses" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
         SELECT
             l.LECTUREID AS lectureId,
             l.TITLE AS title,
@@ -177,7 +224,9 @@
                 JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
                 JOIN USER_INFO u ON le.USER_ID = u.ID
         WHERE
-            li.USERID = #{userid}
+            li.USERID = #{id}
+        order by l.LECTUREID
+        offset (#{cri.pageNum}-1) * #{cri.amount} ROWS FETCH NEXT #{cri.amount} ROWS ONLY
     </select>
 
 

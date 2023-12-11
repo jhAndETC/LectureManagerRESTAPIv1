@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="hyundai.cc.lecturemanage.lecture.mapper.LectureMapper">
+<mapper namespace="hyundai.cc.lecturemanage.lecture.mapper.LectureTestMapper">
     <select id="findLecturerByEmail" resultType="hyundai.cc.lecturemanage.lecturer.dto.LecturerDTO">-->
     SELECT L.ID, U.USERNAME, L.INTRODUCTION
     FROM LECTURER L
@@ -53,7 +53,8 @@
 
     <select id="getLecturesByPage" parameterType="hyundai.cc.domain.Criteria"
             resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
-        select l.LECTUREID    AS lectureId,
+        select
+               l.LECTUREID    AS lectureId,
                l.TITLE        AS title,
                l.LECTURERID   AS lecturerId,
                u.USERNAME     AS lecturerName,
@@ -160,8 +161,8 @@
                LECTURER.INTRODUCTION AS lecturerIntroduction,
                USER_INFO.USERNAME    AS lecturerName
         FROM LECTURE
-                 JOIN LECTURER ON LECTURE.LECTURERID = LECTURER.ID
-                 JOIN USER_INFO ON LECTURER.USER_ID = USER_INFO.ID
+                 INNER JOIN LECTURER ON LECTURE.LECTURERID = LECTURER.ID
+                 INNER JOIN USER_INFO ON LECTURER.USER_ID = USER_INFO.ID
         WHERE LECTURE.LECTUREID = #{lectureId}
         ]]>
 

@@ -1,5 +1,6 @@
 package hyundai.cc.lecturemanage.lecture.dto;
 
+import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -7,18 +8,47 @@ import java.time.LocalDateTime;
 
 @Component
 public class LectureDTOMapper {
-    public LectureResponseDTO toLectureResponseDTO(LectureDTO LectureDTO){
-        Long lectureId=LectureDTO.getLectureId();
-        String title=LectureDTO.getTitle();
-        String lecturerName=LectureDTO.getLecturerName();
+
+    public LectureCreateDTO toLectureCreateDTO(LectureCreateRequestDTO lectureCreateRequestDTO, LecturerDTO lecturerDTO,Long categoryId,Long centerId){
+        Long lectureId=1L;
+        String title=lectureCreateRequestDTO.getTitle();
+        String lecturerId=lecturerDTO.getLecturerId();
+        String lectureTime=lectureCreateRequestDTO.getLectureTime();
+        String location=lectureCreateRequestDTO.getLocation();
+        LocalDate startDate=lectureCreateRequestDTO.getStartDate();
+        LocalDate endDate=lectureCreateRequestDTO.getEndDate();
+        int lectureCount=lectureCreateRequestDTO.getLectureCount();
+        double price=lectureCreateRequestDTO.getPrice();
+        String description=lectureCreateRequestDTO.getDescription();
+
+        return new LectureCreateDTO(
+                lectureId,
+                title,
+                lecturerId,
+                lectureTime,
+                centerId,
+                location,
+                startDate,
+                endDate,
+                lectureCount,
+                price,
+                description,
+                categoryId
+
+        );
+    }
+    public LectureResponseDTO toLectureResponseDTO(LectureDTO lectureDTO){
+        Long lectureId=lectureDTO.getLectureId();
+        String title=lectureDTO.getTitle();
+        String lecturerName=lectureDTO.getLecturerName();
 //        String lecturerIntroduction=LectureDTO.getLecturerIntroduction();
-        String centerName=LectureDTO.getCenterName();
-        String lectureTime= LectureDTO.getLectureTime();
-        LocalDate startDate=LectureDTO.getStartDate();
-        LocalDate endDate=LectureDTO.getEndDate();
-        int lectureCount=LectureDTO.getLectureCount();
-        double price=LectureDTO.getPrice();
-        String lectureDescription=LectureDTO.getDescription();
+        String centerName=lectureDTO.getCenterName();
+        String lectureTime= lectureDTO.getLectureTime();
+        LocalDate startDate=lectureDTO.getStartDate();
+        LocalDate endDate=lectureDTO.getEndDate();
+        int lectureCount=lectureDTO.getLectureCount();
+        double price=lectureDTO.getPrice();
+        String lectureDescription=lectureDTO.getDescription();
         return new LectureResponseDTO(
                 lectureId,
                 title,

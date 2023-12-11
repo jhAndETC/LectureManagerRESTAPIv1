@@ -30,16 +30,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException ex) {
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("E200", ex.getMessage());
+        errorResponse.put("GENERAL", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(UserCreationException.class)
     public ResponseEntity<Map<String, String>> handleUserCreationException(UserCreationException ex) {
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("E201", ex.getMessage());
+        errorResponse.put("GENERAL", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(LectureNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleLectureNotFoundException(UserCreationException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("GENERAL", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
 //    @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    public ResponseEntity<ErrorResponse> handleException(Exception ex) {

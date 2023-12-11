@@ -55,7 +55,7 @@ public class UserDTOMapper {
     public UserCreateDTO FromUpdatetoUserCreateDTO(UserDTO userDTO,UserUpdateRequestDTO userUpdateRequestDTO){
         String id=userDTO.getId();
         String email=userDTO.getEmail();
-        String password= userUpdateRequestDTO.getPassword();
+        String password= userDTO.getPassword();
         String username= userUpdateRequestDTO.getUsername();
         String nickname=userUpdateRequestDTO.getNickname();
         String content=userUpdateRequestDTO.getIntroduction();

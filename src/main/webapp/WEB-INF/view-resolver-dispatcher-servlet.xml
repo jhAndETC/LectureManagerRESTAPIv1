@@ -16,7 +16,6 @@
 
     <!-- Component scan to detect Spring components -->
     <context:component-scan base-package="hyundai.cc" />
-    <!--    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
 
     <!--    &lt;!&ndash; Enable Spring MVC annotation-driven configuration &ndash;&gt;-->
     <mvc:annotation-driven/>
@@ -44,7 +43,8 @@
 
     </bean>
 
-    <mybatis-spring:scan base-package="hyundai.cc.usermanage.user.mapper, hyundai.cc.articlemanage.article.mapper" />
+
+    <mybatis-spring:scan base-package="hyundai.cc.usermanage.user.mapper, hyundai.cc.articlemanage.article.mapper,hyundai.cc.lecturemanage.lecture.mapper" />
 
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>

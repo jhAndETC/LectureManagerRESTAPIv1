@@ -3,9 +3,7 @@ package hyundai.cc.lecturemanage.lecture.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 
@@ -15,8 +13,11 @@ public class LectureCreateRequestDTO {
     @NotBlank(message = "Title is required")
     private String title;
 
-    @NotBlank(message = "Lecturer ID is required")
-    private String lecturerId;
+    @NotEmpty(message = "Email should not be empty")
+    @Email(message = "Invalid email format")
+    private String lectureremail;
+    @NotNull(message = "Center Name is required")
+    private String centername;
 
     @NotBlank(message = "Lecture time is required")
     private String lectureTime;

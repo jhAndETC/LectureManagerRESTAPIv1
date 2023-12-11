@@ -37,7 +37,6 @@
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close"
           c:configuration-ref="hikariConfig" />
 
-
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
@@ -46,5 +45,8 @@
 
 
     <mybatis-spring:scan base-package="hyundai.cc.usermanage.user.mapper, hyundai.cc.articlemanage.article.mapper,hyundai.cc.lecturemanage.lecture.mapper" />
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
 
 </beans>

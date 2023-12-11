@@ -40,20 +40,6 @@ public class ArticleController {
 //                HttpStatus.CREATED);
 //    }
 
-
-    // File Upload test
-    @PostMapping(path="upload")
-    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file){
-
-        try {
-            fileUploadService.upload(file);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.unprocessableEntity().build();
-        }
-    }
-
     @GetMapping("/link")
     public ResponseEntity<String> checkLink() throws Exception {
         try{

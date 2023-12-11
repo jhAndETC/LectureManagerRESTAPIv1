@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Oracle" uuid="ff07b17a-c8f9-4058-a25c-cd0145104c3f">
+    <data-source source="LOCAL" name="Oracle" uuid="0eba5550-a85f-41d0-a534-48048e106994">
       <driver-ref>oracle.19</driver-ref>
       <synchronize>true</synchronize>
       <auto-commit>false</auto-commit>
       <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
       <jdbc-url>jdbc:oracle:thin:@DB20231211_high</jdbc-url>
       <jdbc-additional-properties>
-        <property name="TNSADMIN_DIR" value="$PROJECT_DIR$/../../../../dev/project01/Wallet_DB20231211" />
+        <property name="TNSADMIN_DIR" value="$PROJECT_DIR$/../Wallet_DB20231211" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>

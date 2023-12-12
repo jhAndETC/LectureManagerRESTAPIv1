@@ -10,8 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LecturerDTO {
-    private String lecturerId;
-    private String lecturerName;
-    private String lecturerIntroduction;
+    private String Id;
+    private String userName;
+    private String introduction;
 
 }

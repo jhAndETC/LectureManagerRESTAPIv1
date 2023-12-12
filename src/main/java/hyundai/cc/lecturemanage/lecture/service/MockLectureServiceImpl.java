@@ -26,6 +26,7 @@ public class MockLectureServiceImpl implements LectureService{
 
     private final LectureTestMapper lectureMapper;
 
+
     private final LectureDTOMapper lectureDTOMapper;
     @Autowired
     public MockLectureServiceImpl(LectureTestMapper lectureMapper,LectureDTOMapper lectureDTOMapper) {
@@ -33,13 +34,33 @@ public class MockLectureServiceImpl implements LectureService{
     }
 
     @Override
+    public LecturerDTO findLecturerByEmail(String lecturerEmail){
+        LecturerDTO lecturerDTO=lectureMapper.findLecturerByEmail(lecturerEmail);
+        if (lecturerDTO==null){
+            throw new LecturerNotFoundException("Lecturer not found with email: " + lecturerEmail);
+        }
+        return lecturerDTO;
+    }
+
+    @Override
+    public Long findCategoryIdByName(String categoryName) {
+        return lectureMapper.findCategoryIdByName(categoryName);
+    }
+
+    @Override
+    public Long findCenterIdByName(String centerName) {
+        return lectureMapper.findCenterIdByName(centerName);
+    }
+
+    @Override
     public LectureDTO createLecture(LectureCreateRequestDTO lec) {
-        LecturerDTO lecturerDTO=findLecturerByEmail(lec.getLectureremail());
-        Long categoryId=findCategoryIdByName(lec.getCategoryname());
-        Long centerId=findCenterIdByName(lec.getCentername());
+        LecturerDTO lecturerDTO=findLecturerByEmail(lec.getLecturerEmail());
+        Long categoryId=findCategoryIdByName(lec.getCategoryName());
+        Long centerId=findCenterIdByName(lec.getCenterName());
         LectureCreateDTO lectureCreateDTO=lectureDTOMapper.toLectureCreateDTO(lec,lecturerDTO,categoryId,centerId);
+        lectureMapper.createLecture(lectureCreateDTO);
         try{
-            lectureMapper.createLecture(lectureCreateDTO);
+
         } catch (DataAccessException ex){
             throw new UserCreationException("Cannot create lecture");
         }
@@ -49,9 +70,9 @@ public class MockLectureServiceImpl implements LectureService{
     @Override
     public LectureDTO updateLecture(Long lectureId, LectureCreateRequestDTO lec) {
         LectureDTO lectureDTO=getLectureDetail(lectureId);
-        LecturerDTO lecturerDTO=findLecturerByEmail(lec.getLectureremail());
-        Long categoryId=findCategoryIdByName(lec.getCategoryname());
-        Long centerId=findCenterIdByName(lec.getCentername());
+        LecturerDTO lecturerDTO=findLecturerByEmail(lec.getLecturerEmail());
+        Long categoryId=findCategoryIdByName(lec.getCategoryName());
+        Long centerId=findCenterIdByName(lec.getCenterName());
         LectureCreateDTO lectureCreateDTO=lectureDTOMapper.toLectureCreateDTO(lec,lecturerDTO,categoryId,centerId);
         try {
             lectureMapper.updateLecture(lectureId, lectureCreateDTO);
@@ -75,24 +96,7 @@ public class MockLectureServiceImpl implements LectureService{
         return lecture;
 
     }
-    @Override
-    public LecturerDTO findLecturerByEmail(String lectureremail){
-        LecturerDTO lecturerDTO=lectureMapper.findLecturerByEmail(lectureremail);
-        if (lecturerDTO==null){
-            throw new LecturerNotFoundException("Lecturer not found with email: " + lectureremail);
-        }
-        return lecturerDTO;
-    }
 
-    @Override
-    public Long findCategoryIdByName(String categoryName) {
-        return lectureMapper.findCategoryIdByName(categoryName);
-    }
-
-    @Override
-    public Long findCenterIdByName(String centerName) {
-        return lectureMapper.findCenterIdByName(centerName);
-    }
 
 
 
@@ -113,10 +117,6 @@ public class MockLectureServiceImpl implements LectureService{
         return lectureMapper.getLecturesByPage(cri);
     }
 
-    @Override
-    public List<LectureDTO> getLecturesList() {
-        return lectureMapper.getLectureList();
-    }
 
     @Override
     public LecturerDTO getLectureLecturer(Long lectureId) {

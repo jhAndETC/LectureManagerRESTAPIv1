@@ -15,9 +15,9 @@ public class LectureCreateRequestDTO {
 
     @NotEmpty(message = "Email should not be empty")
     @Email(message = "Invalid email format")
-    private String lectureremail;
+    private String lecturerEmail;
     @NotNull(message = "Center Name is required")
-    private String centername;
+    private String centerName;
 
     @NotBlank(message = "Lecture time is required")
     private String lectureTime;
@@ -38,9 +38,9 @@ public class LectureCreateRequestDTO {
     private double price;
 
     @NotBlank(message = "Description is required")
-    private String description;
+    private String lectureDescription;
 
     @NotNull(message = "Category Name is required")
-    private String categoryname;
+    private String categoryName;
 
 }

@@ -16,7 +16,7 @@ public interface LectureTestMapper {
     public LectureDTO getLectureDetail(Long lectureId);//
     public int getTotalCount(Criteria cri);//
     public List<LectureDTO> getLecturesByPage(Criteria cri);//
-    public LecturerDTO findLecturerByEmail(String lectureremail);//
+    public LecturerDTO findLecturerByEmail(String lecturerEmail);//
     public Long findCategoryIdByName(String categoryName);//
     public Long findCenterIdByName(String centerName);//
     public LecturerDTO  getLectureLecturer(Long lectureId);

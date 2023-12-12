@@ -4,24 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="hyundai.cc.lecturemanage.lecture.mapper.LectureTestMapper">
-    <select id="findLecturerByEmail" resultType="hyundai.cc.lecturemanage.lecturer.dto.LecturerDTO">-->
+    <select id="findLecturerByEmail" parameterType="java.lang.String" resultType="hyundai.cc.lecturemanage.lecturer.dto.LecturerDTO">-->
     SELECT L.ID, U.USERNAME, L.INTRODUCTION
     FROM LECTURER L
              JOIN USER_INFO U ON L.USER_ID = U.ID
-    WHERE U.EMAIL = #{email}
+    WHERE TRIM(U.EMAIL) = TRIM(#{lecturerEmail, jdbcType=VARCHAR})
 
     </select>
 
     <select id="findCategoryIdByName" parameterType="java.lang.String" resultType="java.lang.Long">
         SELECT CATEGORYID
         FROM CATEGORY
-        WHERE CATEGORYNAME = #{categoryName}
+        WHERE TRIM(CATEGORYNAME) = TRIM(#{categoryName})
     </select>
 
     <select id="findCenterIdByName" parameterType="java.lang.String" resultType="java.lang.Long">
         SELECT CENTERID
         FROM CENTER_INFO
-        WHERE NAME = #{centerName}
+        WHERE TRIM(NAME) = TRIM(#{centerName})
     </select>
 
 
@@ -30,50 +30,51 @@
             select LECTUREID_SEQ.nextval from DUAL
         </selectKey>
         <![CDATA[
-        INSERT INTO LECTURE (
-            LECTUREID, CENTERID, TITLE, LECTURERID, LECTURETIME, LOCATION,
-            STARTDATE, ENDDATE, LECTURECOUNT, PRICE, DESCRIPTION, CATEGORYID
-        )
-        VALUES (
-                   #{LECTUREID_SEQ.nextval, jdbcType=NUMERIC},
-                   #{centerId, jdbcType=NUMERIC},
-                   #{title, jdbcType=VARCHAR},
-                   #{lecturerId, jdbcType=VARCHAR},
-                   #{lectureTime, jdbcType=VARCHAR},
-                   #{location, jdbcType=VARCHAR},
-                   #{startDate, jdbcType=DATE},
-                   #{endDate, jdbcType=DATE},
-                   #{lectureCount, jdbcType=NUMERIC},
-                   #{price, jdbcType=NUMERIC},
-                   #{description, jdbcType=CLOB},
-                   #{categoryId, jdbcType=NUMERIC}
-               )
-        ]]>
+    INSERT INTO LECTURE (
+        LECTUREID, CENTERID, TITLE, LECTURERID, LECTURETIME, LOCATION,
+        STARTDATE, ENDDATE, LECTURECOUNT, PRICE, DESCRIPTION, CATEGORYID
+    )
+    VALUES (
+               #{lectureId, jdbcType=NUMERIC},
+               #{centerId, jdbcType=NUMERIC},
+               #{title, jdbcType=VARCHAR},
+               #{lecturerId, jdbcType=VARCHAR},
+               #{lectureTime, jdbcType=VARCHAR},
+               #{location, jdbcType=VARCHAR},
+               #{startDate, jdbcType=DATE},
+               #{endDate, jdbcType=DATE},
+               #{lectureCount, jdbcType=NUMERIC},
+               #{price, jdbcType=NUMERIC},
+               #{description, jdbcType=CLOB},
+               #{categoryId, jdbcType=NUMERIC}
+           )
+    ]]>
     </insert>
 
     <select id="getLecturesByPage" parameterType="hyundai.cc.domain.Criteria"
             resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
-        select
-               l.LECTUREID    AS lectureId,
-               l.TITLE        AS title,
-               l.LECTURERID   AS lecturerId,
-               u.USERNAME     AS lecturerName,
---         le.INTRODUCTION AS lecturerIntroduction,
-               c.NAME         AS centerName,
-               l.LECTURETIME  AS lectureTime,
-               l.LOCATION     AS location,
-               l.STARTDATE    AS startDate,
-               l.ENDDATE      AS endDate,
-               l.LECTURECOUNT AS lectureCount,
-               l.PRICE        AS price,
-               l.DESCRIPTION  AS description,
-               l.CATEGORYID   AS categoryId
-        FROM ENROLLMENT e
-                 INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
-                 INNER JOIN LECTURER le ON l.LECTURERID = le.ID
-                 INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
-                 INNER JOIN USER_INFO u ON le.USER_ID = u.ID
-        order by l.LECTUREID asc
+        SELECT
+            l.LECTUREID    AS lectureId,
+            l.TITLE        AS title,
+            l.LECTURERID   AS lecturerId,
+            u.USERNAME     AS lecturerName,
+            -- le.INTRODUCTION AS lecturerIntroduction,
+            c.NAME         AS centerName,
+            l.LECTURETIME  AS lectureTime,
+            l.LOCATION     AS location,
+            l.STARTDATE    AS startDate,
+            l.ENDDATE      AS endDate,
+            l.LECTURECOUNT AS lectureCount,
+            l.PRICE        AS price,
+            l.DESCRIPTION  AS description,
+            l.CATEGORYID   AS categoryId
+        FROM
+            LECTURE l
+                INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+                INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+                INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+        ORDER BY
+            l.LECTUREID ASC
         offset (#{pageNum} - 1) * #{amount} ROWS FETCH NEXT #{amount} ROWS ONLY
     </select>
 
@@ -107,49 +108,52 @@
 
     <select id="getLectureDetail" parameterType="java.lang.Long"
             resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
-        select l.LECTUREID    AS lectureId,
-               l.TITLE        AS title,
-               l.LECTURERID   AS lecturerId,
-               u.USERNAME     AS lecturerName,
---         le.INTRODUCTION AS lecturerIntroduction,
-               c.NAME         AS centerName,
-               l.LECTURETIME  AS lectureTime,
-               l.LOCATION     AS location,
-               l.STARTDATE    AS startDate,
-               l.ENDDATE      AS endDate,
-               l.LECTURECOUNT AS lectureCount,
-               l.PRICE        AS price,
-               l.DESCRIPTION  AS description,
-               l.CATEGORYID   AS categoryId
-        FROM ENROLLMENT e
-                 INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
-                 INNER JOIN LECTURER le ON l.LECTURERID = le.ID
-                 INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
-                 INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+        SELECT
+            l.LECTUREID    AS lectureId,
+            l.TITLE        AS title,
+            l.LECTURERID   AS lecturerId,
+            u.USERNAME     AS lecturerName,
+            -- le.INTRODUCTION AS lecturerIntroduction,
+            c.NAME         AS centerName,
+            l.LECTURETIME  AS lectureTime,
+            l.LOCATION     AS location,
+            l.STARTDATE    AS startDate,
+            l.ENDDATE      AS endDate,
+            l.LECTURECOUNT AS lectureCount,
+            l.PRICE        AS price,
+            l.DESCRIPTION  AS description,
+            l.CATEGORYID   AS categoryId
+        FROM
+            LECTURE l
+                INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+                INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+                INNER JOIN USER_INFO u ON le.USER_ID = u.ID
         WHERE l.LECTUREID = #{lectureId}
     </select>
 
     <select id="getLectureList" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">-->
-    select l.LECTUREID    AS lectureId,
-           l.TITLE        AS title,
-           l.LECTURERID   AS lecturerId,
-           u.USERNAME     AS lecturerName,
---         le.INTRODUCTION AS lecturerIntroduction,
-           c.NAME         AS centerName,
-           l.LECTURETIME  AS lectureTime,
-           l.LOCATION     AS location,
-           l.STARTDATE    AS startDate,
-           l.ENDDATE      AS endDate,
-           l.LECTURECOUNT AS lectureCount,
-           l.PRICE        AS price,
-           l.DESCRIPTION  AS description,
-           l.CATEGORYID   AS categoryId
-    FROM ENROLLMENT e
-             INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
-             INNER JOIN LECTURER le ON l.LECTURERID = le.ID
-             INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
-             INNER JOIN USER_INFO u ON le.USER_ID = u.ID
-    order by l.LECTUREID asc
+    SELECT
+        l.LECTUREID    AS lectureId,
+        l.TITLE        AS title,
+        l.LECTURERID   AS lecturerId,
+        u.USERNAME     AS lecturerName,
+        -- le.INTRODUCTION AS lecturerIntroduction,
+        c.NAME         AS centerName,
+        l.LECTURETIME  AS lectureTime,
+        l.LOCATION     AS location,
+        l.STARTDATE    AS startDate,
+        l.ENDDATE      AS endDate,
+        l.LECTURECOUNT AS lectureCount,
+        l.PRICE        AS price,
+        l.DESCRIPTION  AS description,
+        l.CATEGORYID   AS categoryId
+    FROM
+        LECTURE l
+            INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+            INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+            INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+    ORDER BY
+        l.LECTUREID ASC
 
     </select>
 
@@ -157,15 +161,14 @@
             resultType="hyundai.cc.lecturemanage.lecturer.dto.LecturerDTO">
         <![CDATA[
         SELECT
-               LECTURER.ID           AS lecturerId,
-               LECTURER.INTRODUCTION AS lecturerIntroduction,
-               USER_INFO.USERNAME    AS lecturerName
+               LECTURER.ID           AS Id,
+               LECTURER.INTRODUCTION AS introduction,
+               USER_INFO.USERNAME    AS userName
         FROM LECTURE
                  INNER JOIN LECTURER ON LECTURE.LECTURERID = LECTURER.ID
                  INNER JOIN USER_INFO ON LECTURER.USER_ID = USER_INFO.ID
-        WHERE LECTURE.LECTUREID = #{lectureId}
-        ]]>
-
+        WHERE LECTURE.LECTUREID = #{lectureId, jdbcType=NUMERIC}
+            ]]>
     </select>
 
 

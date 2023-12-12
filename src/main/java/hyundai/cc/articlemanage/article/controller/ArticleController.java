@@ -4,7 +4,7 @@ import hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.service.ArticleService;
-import hyundai.cc.articlemanage.article.service.FileUploadService;
+//import hyundai.cc.articlemanage.article.service.FileUploadService;
 import hyundai.cc.domain.ArticleCriteria;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
@@ -23,14 +23,11 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final ArticleDTOMapper articleDTOMapper;
-    private final FileUploadService fileUploadService;
 
     public ArticleController(ArticleService articleService,
-                             ArticleDTOMapper articleDTOMapper,
-                             FileUploadService fileUploadService) {
+                             ArticleDTOMapper articleDTOMapper) {
         this.articleService = articleService;
         this.articleDTOMapper = articleDTOMapper;
-        this.fileUploadService = fileUploadService;
     }
 
      // (생성) 게시글 작성
@@ -72,7 +69,7 @@ public class ArticleController {
             log.info("articleController, articleCriteria: " + articleCriteria.toString());
             HashMap<String, Object> articleListByLecture = articleService.getArticleListByLectureWithPagination(articleCriteria);
             log.info(articleListByLecture.toString());
-            
+
             HashMap<String, Object> map = new HashMap<>();
             map.put("TotalAmountOfData", total);
             map.put("data", articleListByLecture.get("articleDTOList"));

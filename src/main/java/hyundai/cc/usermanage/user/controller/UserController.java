@@ -72,6 +72,10 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getUserDetail(@PathVariable String userId) {
         return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.getUserDetail(userId)));
     }
+//    @GetMapping("/{userId}")
+//    public ResponseEntity<?> getUserDetail(@PathVariable String userId) {
+//        return ResponseEntity.ok(userservice.getUserDetail(userId));
+//    }
 
     @GetMapping("/{userId}/lectures/progress")
     public ResponseEntity<?> findProgressCourses(@PathVariable String userId,Criteria cri){
@@ -143,7 +147,12 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable String userId) {
-        return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.deleteUser(userId)));
+        try {
+            userservice.deleteUser(userId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 

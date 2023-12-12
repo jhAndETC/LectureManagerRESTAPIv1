@@ -10,37 +10,37 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class LectureCreateRequestDTO {
-    @NotBlank(message = "Title is required")
+    @NotBlank(message = "강의 제목을 입력해주세요")
     private String title;
 
-    @NotEmpty(message = "Email should not be empty")
-    @Email(message = "Invalid email format")
+    @NotEmpty(message = "강사 이메일을 입력해주세요")
+    @Email(message = "유효하지 않은 이메일 형식입니다.")
     private String lecturerEmail;
-    @NotNull(message = "Center Name is required")
+    @NotNull(message = "지점명을 입력해주세요")
     private String centerName;
 
-    @NotBlank(message = "Lecture time is required")
+    @NotBlank(message = "강의 시간를 입력해주세요")
     private String lectureTime;
 
-    @NotBlank(message = "Location is required")
+    @NotBlank(message = "강의 장소를 입력해주세요")
     private String location;
 
-    @NotNull(message = "Start date is required")
+    @NotNull(message = "강의 시작 날짜를 입력해주세요")
     private LocalDate startDate;
 
-    @NotNull(message = "End date is required")
+    @NotNull(message = "강의 종료 날짜를 입력해주세요")
     private LocalDate endDate;
 
-    @Min(value = 1, message = "Lecture count should be at least 1")
+    @Min(value = 1, message = "강의 횟수는 1회 이상이어야 합니다")
     private int lectureCount;
 
-    @Min(value = 0, message = "Price cannot be negative")
+    @Min(value = 0, message = "수강료는 0원 이상으로 입력해주세요")
     private double price;
 
-    @NotBlank(message = "Description is required")
+    @NotBlank(message = "강의 소개를 입력해주세요")
     private String lectureDescription;
 
-    @NotNull(message = "Category Name is required")
+    @NotNull(message = "카테고리명을 입력해주세요")
     private String categoryName;
 
 }

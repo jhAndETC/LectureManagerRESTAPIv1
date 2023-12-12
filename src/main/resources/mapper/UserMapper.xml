@@ -39,16 +39,55 @@
     </insert>
 
 
-    <select id="getUserDetail" parameterType="java.lang.String" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
-        SELECT  id,
-                email,
-                PASSWORD,
-                username,
-                nickname,
-                content,
-                createDate
-        FROM USER_INFO
-        WHERE ID = #{id}
+
+
+<!--    <select id="getUserDetail" parameterType="java.lang.String" resultType="hyundai.cc.usermanage.user.dto.UserDTO">-->
+<!--        SELECT  id,-->
+<!--                email,-->
+<!--                PASSWORD,-->
+<!--                username,-->
+<!--                nickname,-->
+<!--                content,-->
+<!--                createDate-->
+<!--        FROM USER_INFO-->
+<!--        WHERE ID = #{id}-->
+<!--    </select>-->
+
+    <resultMap id="userResultMap" type="hyundai.cc.usermanage.user.dto.UserDTO">
+        <id property="id" column="ID"/>
+        <result property="email" column="EMAIL"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="username" column="USERNAME"/>
+        <result property="nickname" column="NICKNAME"/>
+        <result property="createDate" column="CREATEDATE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="enable" column="ENABLE"/>
+        <collection property="roleList" ofType="java.lang.String" resultMap="roleResultMap"/>
+    </resultMap>
+
+    <resultMap id="roleResultMap" type="java.lang.String">
+        <result property="roleList" column="authority"/>
+    </resultMap>
+
+    <select id="getUserDetail" parameterType="java.lang.String" resultMap="userResultMap">
+        SELECT
+            U.ID,
+            U.EMAIL,
+            U.PASSWORD,
+            U.USERNAME,
+            U.NICKNAME,
+            U.CREATEDATE,
+            U.CONTENT,
+            U.ENABLE,
+            R.authority
+        FROM
+            USER_INFO U
+                LEFT JOIN
+            USER_ROLE UR ON U.ID = UR.USER_ID
+                LEFT JOIN
+            ROLE_INFO R ON UR.ROLE_ID = R.ID
+        WHERE
+            U.ID = #{id}
     </select>
 
 
@@ -67,24 +106,7 @@
         DELETE FROM USER_INFO WHERE ID = #{userId}
     </delete>
 
-    <!-- READ -->
-<!--    <select id="getUsersByPage" parameterType="hyundai.cc.domain.Criteria" resultType="hyundai.cc.usermanage.user.dto.UserDTO">-->
-<!--        <![CDATA[-->
-<!--        select-->
-<!--            id, email, PASSWORD,username, nickname,createdate,content,enable-->
-<!--        from-->
-<!--            (-->
-<!--                select /*+ INDEX_DESC(USER_INFO pk_user_info) */-->
-<!--                    id, email, PASSWORD, username, nickname, createdate, content, enable,-->
-<!--                    ROW_NUMBER() OVER (ORDER BY id desc) AS rn-->
-<!--                from-->
-<!--                    USER_INFO-->
-<!--                where-->
-<!--                    rownum <= #{pageNum} * #{amount}-->
-<!--            )-->
-<!--        where rn > (#{pageNum}-1) * #{amount}-->
-<!--        ]]>-->
-<!--    </select>-->
+
 
     <select id="getUsersByPage" parameterType="hyundai.cc.domain.Criteria" resultType="hyundai.cc.usermanage.user.dto.UserDTO">
         select id, email, PASSWORD,username, nickname,createdate,content,enable

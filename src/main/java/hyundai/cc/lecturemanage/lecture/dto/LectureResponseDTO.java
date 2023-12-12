@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LectureResponseDTO {
 
-    private Long lectureId;
+    private Long id;
     private String title;
     private String lecturerName;
 //    private String lecturerIntroduction;

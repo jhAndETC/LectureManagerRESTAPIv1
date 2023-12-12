@@ -13,7 +13,7 @@ public interface UserService {
     public List<UserDTO> getUserList() ;
     public UserDTO getUserDetail(String UserId);
     public UserDTO updateUser(String userId, UserUpdateRequestDTO user);
-    public UserDTO deleteUser(String userId);
+    public void deleteUser(String userId);
     public List<UserDTO> getUsersByPage(Criteria cri);
     public int getTotal(Criteria cri);
     public int getProgressCount(String userId,Criteria cri);

@@ -2,6 +2,7 @@ package hyundai.cc.usermanage.user.dto;
 
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Getter
@@ -17,7 +18,7 @@ public class UserDTO {
     private LocalDateTime createDate;
     private String content;
     private boolean enable;
-    //private Set<RoleVO> roleList;
+    private Set<String> roleList;
     //DB에서 가져오기 위함
 
 }

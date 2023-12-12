@@ -16,11 +16,14 @@ public interface UserService {
     public UserDTO deleteUser(String userId);
     public List<UserDTO> getUsersByPage(Criteria cri);
     public int getTotal(Criteria cri);
+    public int getProgressCount(String userId,Criteria cri);
+    public int getFinishCount(String userId,Criteria cri);
+    public int getLikedCount(String userId,Criteria cri);
 
     //강의 목록 조회
-    public List<LectureDTO> findProgressCourses(String UserId);
-    public List<LectureDTO> findFinishCourses(String UserId);
-    public List<LectureDTO> findLikedCourses(String UserId);
+    public List<LectureDTO> findProgressCourses(String userId,Criteria cri);
+    public List<LectureDTO> findFinishCourses(String userId,Criteria cri);
+    public List<LectureDTO> findLikedCourses(String userId,Criteria cri);
 
 
 }

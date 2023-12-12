@@ -12,14 +12,14 @@ public class LectureDTOMapper {
     public LectureCreateDTO toLectureCreateDTO(LectureCreateRequestDTO lectureCreateRequestDTO, LecturerDTO lecturerDTO,Long categoryId,Long centerId){
         Long lectureId=1L;
         String title=lectureCreateRequestDTO.getTitle();
-        String lecturerId=lecturerDTO.getLecturerId();
+        String lecturerId=lecturerDTO.getId();
         String lectureTime=lectureCreateRequestDTO.getLectureTime();
         String location=lectureCreateRequestDTO.getLocation();
         LocalDate startDate=lectureCreateRequestDTO.getStartDate();
         LocalDate endDate=lectureCreateRequestDTO.getEndDate();
         int lectureCount=lectureCreateRequestDTO.getLectureCount();
         double price=lectureCreateRequestDTO.getPrice();
-        String description=lectureCreateRequestDTO.getDescription();
+        String description=lectureCreateRequestDTO.getLectureDescription();
 
         return new LectureCreateDTO(
                 lectureId,
@@ -46,6 +46,7 @@ public class LectureDTOMapper {
         String lectureTime= lectureDTO.getLectureTime();
         LocalDate startDate=lectureDTO.getStartDate();
         LocalDate endDate=lectureDTO.getEndDate();
+        String location=lectureDTO.getLocation();
         int lectureCount=lectureDTO.getLectureCount();
         double price=lectureDTO.getPrice();
         String lectureDescription=lectureDTO.getDescription();
@@ -57,6 +58,7 @@ public class LectureDTOMapper {
                 lectureTime,
                 startDate,
                 endDate,
+                location,
                 lectureCount,
                 price,
                 lectureDescription);

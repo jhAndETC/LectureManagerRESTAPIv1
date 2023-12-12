@@ -86,4 +86,13 @@ public class ArticleServiceImpl implements ArticleService{
             throw e;
         }
     }
+
+    @Override
+    public void updateHits(long articleId) throws Exception {
+        try{
+            articleMapper.updateHits(articleId);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+    }
 }

@@ -74,27 +74,58 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/lectures/progress")
-    public ResponseEntity<?> findProgressCourses(@PathVariable String userId){
-        return new ResponseEntity<>(userservice.findProgressCourses(userId).stream()
-                .map(lecturedtoMapper::toLectureResponseDTO)
-                .collect(Collectors.toList()),
-                HttpStatus.OK);
+    public ResponseEntity<?> findProgressCourses(@PathVariable String userId,Criteria cri){
+        int total = userservice.getProgressCount(userId,cri);
+        PageDTO page=new PageDTO(cri, total);
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("next",page.isNext());
+        map.put("prev",page.isPrev());
+        //map.put("startpage",page.getStartPage());
+        map.put("totalPages",page.getEndPage());
+        map.put("currentPage",cri.getPageNum());
+        map.put("itemsPerPage",cri.getAmount());
+        map.put("totalItems",total);
+        map.put("data",userservice.findProgressCourses(userId,cri).stream()
+                        .map(lecturedtoMapper::toLectureResponseDTO)
+                        .collect(Collectors.toList()));
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
 
     @GetMapping("/{userId}/lectures/finish")
-    public ResponseEntity<?> findFinishCourses(@PathVariable String userId){
-        return new ResponseEntity<>(userservice.findFinishCourses(userId).stream()
+    public ResponseEntity<?> findFinishCourses(@PathVariable String userId,Criteria cri){
+        int total = userservice.getFinishCount(userId,cri);
+        PageDTO page=new PageDTO(cri, total);
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("data",userservice.findFinishCourses(userId,cri).stream()
                 .map(lecturedtoMapper::toLectureResponseDTO)
-                .collect(Collectors.toList()),
-                HttpStatus.OK);
+                .collect(Collectors.toList()));
+        map.put("next",page.isNext());
+        map.put("prev",page.isPrev());
+        //map.put("startpage",page.getStartPage());
+        map.put("totalPages",page.getEndPage());
+        map.put("currentPage",cri.getPageNum());
+        map.put("itemsPerPage",cri.getAmount());
+        map.put("totalItems",total);
+
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
     @GetMapping("/{userId}/lectures/keep")
-    public ResponseEntity<?> findLikedCourses(@PathVariable String userId){
-        return new ResponseEntity<>(userservice.findLikedCourses(userId).stream()
+    public ResponseEntity<?> findLikedCourses(@PathVariable String userId,Criteria cri){
+        int total = userservice.getLikedCount(userId,cri);
+        PageDTO page=new PageDTO(cri, total);
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("next",page.isNext());
+        map.put("prev",page.isPrev());
+        //map.put("startpage",page.getStartPage());
+        map.put("totalPages",page.getEndPage());
+        map.put("currentPage",cri.getPageNum());
+        map.put("itemsPerPage",cri.getAmount());
+        map.put("totalItems",total);
+        map.put("data",userservice.findLikedCourses(userId,cri).stream()
                 .map(lecturedtoMapper::toLectureResponseDTO)
-                .collect(Collectors.toList()),
-                HttpStatus.OK);
+                .collect(Collectors.toList()));
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
 

@@ -30,8 +30,11 @@ public interface UserMapper {
     public void updateUser(@Param("id") String userId, @Param("user") UserCreateDTO user);
     public void deleteUser(String userId);
     public int getTotalCount(Criteria cri);
-    public List<LectureDTO> findProgressCourses(String UserId);
-    public List<LectureDTO> findFinishCourses(String UserId);
-    public List<LectureDTO> findLikedCourses(String UserId);
+    public int getProgressCount(@Param("id") String userId, @Param("cri")Criteria cri);
+    public int getFinishCount(@Param("id") String userId, @Param("cri")Criteria cri);
+    public int getLikedCount(@Param("id") String userId, @Param("cri")Criteria cri);
+    public List<LectureDTO> findProgressCourses(@Param("id") String userId, @Param("cri")Criteria cri);
+    public List<LectureDTO> findFinishCourses(@Param("id") String userId, @Param("cri")Criteria cri);
+    public List<LectureDTO> findLikedCourses(@Param("id") String userId, @Param("cri")Criteria cri);
 
 }

@@ -18,9 +18,8 @@ public interface LectureService {
     public LectureDTO deleteLecture(Long lectureId);
     public int getTotal(Criteria cri);
     public List<LectureDTO> getLecturesByPage(Criteria cri);
-    public List<LectureDTO> getLecturesList();
     public LecturerDTO getLectureLecturer(Long lectureId);
-    public LecturerDTO findLecturerByEmail(String lectureremail);
+    public LecturerDTO findLecturerByEmail(String lecturerEmail);
     public Long findCategoryIdByName(String categoryName);
     public Long findCenterIdByName(String centerName);
 

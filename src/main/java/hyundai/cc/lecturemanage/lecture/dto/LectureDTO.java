@@ -23,6 +23,7 @@ public class LectureDTO {
     private String lectureTime;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String location;
     private int lectureCount;
     private double price;
     private String description;

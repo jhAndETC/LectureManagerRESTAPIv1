@@ -16,15 +16,15 @@ public class UserUpdateRequestDTO {
 //    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
 //    private String password;
 
-    @NotEmpty(message = "Username should not be empty")
-    @Size(max = 100, message = "Username must be at most 100 characters")
+    @NotEmpty(message = "이름을 입력해주세요")
+    @Size(max = 100, message = "이름은 최대 100자까지 가능합니다")
     private String username;
 
-    @NotEmpty(message = "Nickname should not be empty")
-    @Size(max = 50, message = "Nickname must be at most 50 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Nickname can only contain letters and numbers")
+    @NotEmpty(message = "닉네임을 입력해주세요")
+    @Size(max = 50, message = "닉네임은 최대 50자까지 가능합니다")
+    @Pattern(regexp = "^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$", message = "특수문자 제외 50자까지 가능합니다")
     private String nickname;
-    @Size(max = 1000, message = "Username must be at most 50 characters")
+    @Size(max = 1000, message = "자기소개는 최대 1000자까지 가능합니다")
     private String introduction;
     //생성 요청 DTO (Controller)
 }

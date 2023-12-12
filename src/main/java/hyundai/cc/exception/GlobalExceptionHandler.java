@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,26 +31,43 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException ex) {
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("GENERAL", ex.getMessage());
+        errorResponse.put("NOT FOUND", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(UserCreationException.class)
     public ResponseEntity<Map<String, String>> handleUserCreationException(UserCreationException ex) {
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("GENERAL", ex.getMessage());
+        errorResponse.put("NOT FOUND", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(LectureNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleLectureNotFoundException(UserCreationException ex) {
+    public ResponseEntity<Map<String, String>> handleLectureNotFoundException(LectureNotFoundException ex) {
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("GENERAL", ex.getMessage());
+        errorResponse.put("NOT FOUND", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(DuplicateNicknameException.class)
+    public ResponseEntity<?> handleDuplicateNicknameException(DuplicateNicknameException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("nickname", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DuplicateEmailException .class)
+    public ResponseEntity<Map<String, String>> handleDuplicateEmailException(DuplicateEmailException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("email", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 //    @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-//        return new ResponseEntity<>(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
+//    public ResponseEntity<?> handleException(Exception ex) {
+//        Map<String, String> errorResponse = new HashMap<>();
+//        errorResponse.put("GENERAL", "Internal Server Error");
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
 
     @Getter

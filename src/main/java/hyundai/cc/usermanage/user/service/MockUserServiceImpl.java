@@ -1,6 +1,8 @@
 package hyundai.cc.usermanage.user.service;
 
 import hyundai.cc.domain.Criteria;
+import hyundai.cc.exception.DuplicateEmailException;
+import hyundai.cc.exception.DuplicateNicknameException;
 import hyundai.cc.lecturemanage.lecture.dto.LectureDTO;
 import hyundai.cc.usermanage.user.dto.*;
 import hyundai.cc.exception.UserCreationException;
@@ -9,6 +11,7 @@ import hyundai.cc.usermanage.user.mapper.UserMapper;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,8 +32,14 @@ public class MockUserServiceImpl implements UserService{
         UserCreateDTO userCreateDTO = userdtoMapper.toUserCreateDTO(user);
         try{
             usermapper.createUser(userCreateDTO);
-        } catch (DataAccessException ex){
-            throw new UserCreationException("Cannot create user");
+        } catch (DataIntegrityViolationException ex) {
+            if (ex.getMessage().contains("UK_NICKNAME")) {
+                throw new DuplicateNicknameException("이미 존재하는 닉네임입니다.");
+            } else if (ex.getMessage().contains("UK_EMAIL")) {
+                throw new DuplicateEmailException("이미 가입한 이메일입니다.");
+            } else {
+                throw new RuntimeException("Unique constraint violation: " + ex.getMessage());
+            }
         }
         return getUserDetail(userCreateDTO.getId());
     }
@@ -65,11 +74,9 @@ public class MockUserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO deleteUser(String userid) {
-        log.info("delete user...." + userid);
+    public void deleteUser(String userid) {
         UserDTO user=getUserDetail(userid);
         usermapper.deleteUser(userid);
-        return user;
     }
 
     @Override

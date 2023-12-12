@@ -6,6 +6,7 @@ import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.service.ArticleService;
 import hyundai.cc.articlemanage.article.service.FileUploadService;
 import hyundai.cc.domain.ArticleCriteria;
+import hyundai.cc.filemanage.file.controller.FileController;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +24,28 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final ArticleDTOMapper articleDTOMapper;
-    private final FileUploadService fileUploadService;
+    private final FileController fileController;
 
     public ArticleController(ArticleService articleService,
                              ArticleDTOMapper articleDTOMapper,
-                             FileUploadService fileUploadService) {
+                             FileController fileController) {
         this.articleService = articleService;
         this.articleDTOMapper = articleDTOMapper;
-        this.fileUploadService = fileUploadService;
+        this.fileController = fileController;
     }
 
      // (생성) 게시글 작성
 //    @PostMapping()
-//    public ResponseEntity<?> createArticle(@Valid @RequestParam long lectureId, String userId, @RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
-//        return new ResponseEntity<>(articleDTOMapper.toArticleResponseDTO(articleService.createArticle(articleCreateRequestDTO)),
-//                HttpStatus.CREATED);
+//    public ResponseEntity<?> createArticle(@RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
+//        try{
+//            // 파일 첨부 시 파일 업로드
+//            if (articleCreateRequestDTO.getUploadFile() != null) {
+//                fileController.upload(articleCreateRequestDTO.getUploadFile());
+//            }
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>("insert Error", HttpStatus.BAD_REQUEST);
+//        }
 //    }
 
     @GetMapping("/link")
@@ -62,28 +70,27 @@ public class ArticleController {
     }
 
     // (조회) lecture 별 article 가져오기 -> pagination 전
-    @GetMapping("/lectures/{lectureId}")
-    public ResponseEntity<?> getArticleListByLecture(@PathVariable long lectureId,
+    @GetMapping()
+    public ResponseEntity<?> getArticleListByLecture(@RequestParam long lecId,
                                                      @RequestParam(required = false) Integer cursor,
                                                      @RequestParam(defaultValue="10") Integer amount){
+        HashMap<String, Object> map = new HashMap<>();
         try{
-            int total = articleService.getTotal(lectureId);
-            ArticleCriteria articleCriteria = new ArticleCriteria(lectureId, cursor, amount);
+            int total = articleService.getTotal(lecId);
+            ArticleCriteria articleCriteria = new ArticleCriteria(lecId, cursor, amount);
             log.info("articleController, articleCriteria: " + articleCriteria.toString());
             HashMap<String, Object> articleListByLecture = articleService.getArticleListByLectureWithPagination(articleCriteria);
             log.info(articleListByLecture.toString());
-            
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("TotalAmountOfData", total);
+
+            map.put("Total", total);
             map.put("data", articleListByLecture.get("articleDTOList"));
-            map.put("cursor", cursor);
+            map.put("currentCursor", cursor);
             map.put("next", articleListByLecture.get("next"));
-            map.put("currentDataAmount", amount);
-            return new ResponseEntity<>(map, HttpStatus.OK);
+            map.put("amount", amount);
         } catch (Exception e){
             log.info(e.getMessage());
-            return new ResponseEntity<>("can't find article by lecture" + lectureId, HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(map, HttpStatus.OK);
 
     }
 

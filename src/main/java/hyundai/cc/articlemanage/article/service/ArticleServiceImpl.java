@@ -50,7 +50,7 @@ public class ArticleServiceImpl implements ArticleService{
                 // List의 마지막 요소를 가져오기
                 ArticleDTO lastArticle = articleDTOList.get(articleDTOList.size() - 1);
                 // 마지막 Article의 articleId를 가져오기
-                long lastArticleId = lastArticle.getArticleId();
+                long lastArticleId = lastArticle.getId();
                 // 출력 또는 다른 용도로 사용
                 log.info("가장 마지막 articleId: " + lastArticleId);
                 HashMap<String, Object> map = new HashMap<>();

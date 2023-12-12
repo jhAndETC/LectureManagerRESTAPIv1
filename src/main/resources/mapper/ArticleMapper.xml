@@ -6,10 +6,11 @@
 <mapper namespace="hyundai.cc.articlemanage.article.mapper.ArticleMapper">
     <select id="getAllArticleList" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
-        select a.articleId, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-            nvl(f.URL, 'file null') as fileUrl,
-            nvl(u.NICKNAME, 'nickname null') as writerNickname,
-            nvl(l.TITLE, 'lecture title null') as lectureTitle
+        select a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
+            nvl(f.URL, '') as fileUrl,
+            nvl(u.NICKNAME, '') as writerNickname,
+            a.lectureId as lectureId,
+            nvl(l.TITLE, '') as lectureTitle
         from article a
         left outer join FILE_INFO f on a.FILEID = f.FILEID
         left outer join USER_INFO u on a.WRITERID = u.id
@@ -20,9 +21,10 @@
 
     <select id="getArticleListByLectureWithPaginationFirst" parameterType="hyundai.cc.domain.ArticleCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
-        SELECT a.articleId, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
+        SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
                NVL(f.URL, 'file null') AS fileUrl,
                NVL(u.NICKNAME, 'nickname null') AS writerNickname,
+               a.lectureId as lectureId,
                NVL(l.TITLE, 'lecture title null') AS lectureTitle
         FROM (
                  SELECT articleId, title, content, regdate, updateDate, views, is_notice,
@@ -41,10 +43,11 @@
 
     <select id="getArticleListByLectureWithPagination" parameterType="hyundai.cc.domain.ArticleCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
-        SELECT a.articleId, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-               NVL(f.URL, 'file null') AS fileUrl,
-               NVL(u.NICKNAME, 'nickname null') AS writerNickname,
-               NVL(l.TITLE, 'lecture title null') AS lectureTitle
+        SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
+               NVL(f.URL, '') AS fileUrl,
+               NVL(u.NICKNAME, '') AS writerNickname,
+               a.lectureId as lectureId,
+               NVL(l.TITLE, '') AS lectureTitle
         FROM (
                  SELECT articleId, title, content, regdate, updateDate, views, is_notice,
                         FILEID, WRITERID, LECTUREID,
@@ -62,9 +65,10 @@
 
     <select id="getArticleDetail" parameterType="_long" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
-        select a.articleId, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
+        select  a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
                nvl(f.URL, 'file null') as fileUrl,
                nvl(u.NICKNAME, 'nickname null') as writerNickname,
+               a.lectureId as lectureId,
                nvl(l.TITLE, 'lecture title null') as lectureTitle
         from article a
                  left outer join FILE_INFO f on a.FILEID = f.FILEID

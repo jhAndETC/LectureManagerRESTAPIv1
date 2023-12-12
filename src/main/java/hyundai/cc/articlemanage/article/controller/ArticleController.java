@@ -1,19 +1,15 @@
 package hyundai.cc.articlemanage.article.controller;
 
-import hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.service.ArticleService;
-//import hyundai.cc.articlemanage.article.service.FileUploadService;
 import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.filemanage.file.controller.FileController;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,7 +28,6 @@ public class ArticleController {
         this.articleService = articleService;
         this.articleDTOMapper = articleDTOMapper;
         this.fileController = fileController;
-
     }
 
      // (생성) 게시글 작성
@@ -82,7 +77,8 @@ public class ArticleController {
             log.info("articleController, articleCriteria: " + articleCriteria.toString());
             HashMap<String, Object> articleListByLecture = articleService.getArticleListByLectureWithPagination(articleCriteria);
             log.info(articleListByLecture.toString());
-            map.put("Total", total);
+
+            map.put("total", total);
             map.put("data", articleListByLecture.get("articleDTOList"));
             map.put("currentCursor", cursor);
             map.put("next", articleListByLecture.get("next"));

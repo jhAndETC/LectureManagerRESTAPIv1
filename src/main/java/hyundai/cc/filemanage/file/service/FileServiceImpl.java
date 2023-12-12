@@ -28,7 +28,7 @@ import java.util.UUID;
 @PropertySource("classpath:app.properties")
 public class FileServiceImpl implements FileService {
 
-    @Value("${uploadPath}")
+    @Value("azure-blob://jhandetc/")
     private String uploadFolder;
 
     private String getFolder() {

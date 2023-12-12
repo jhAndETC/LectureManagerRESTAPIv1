@@ -25,10 +25,10 @@ import java.util.List;
 
 @Log
 @RestController
-@RequestMapping("files")
+@RequestMapping("blob")
 @PropertySource("classpath:app.properties")
 public class FileController {
-    @Value("${uploadPath}")
+    @Value("azure-blob://jhandetc/")
     private String uploadFolder;
     private final FileService fileService;
 

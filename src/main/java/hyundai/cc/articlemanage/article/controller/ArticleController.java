@@ -4,7 +4,7 @@ import hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.service.ArticleService;
-import hyundai.cc.articlemanage.article.service.FileUploadService;
+//import hyundai.cc.articlemanage.article.service.FileUploadService;
 import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.filemanage.file.controller.FileController;
 import lombok.extern.java.Log;
@@ -32,6 +32,7 @@ public class ArticleController {
         this.articleService = articleService;
         this.articleDTOMapper = articleDTOMapper;
         this.fileController = fileController;
+
     }
 
      // (생성) 게시글 작성
@@ -81,7 +82,6 @@ public class ArticleController {
             log.info("articleController, articleCriteria: " + articleCriteria.toString());
             HashMap<String, Object> articleListByLecture = articleService.getArticleListByLectureWithPagination(articleCriteria);
             log.info(articleListByLecture.toString());
-
             map.put("Total", total);
             map.put("data", articleListByLecture.get("articleDTOList"));
             map.put("currentCursor", cursor);

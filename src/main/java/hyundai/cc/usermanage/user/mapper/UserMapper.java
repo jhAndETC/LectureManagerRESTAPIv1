@@ -27,6 +27,7 @@ public interface UserMapper {
     public List<UserDTO> getUserList();
     public List<UserDTO> getUsersByPage(Criteria cri);
     public UserDTO getUserDetail(String userId);
+    public void createRole(String userId);
     public void updateUser(@Param("id") String userId, @Param("user") UserCreateDTO user);
     public void deleteUser(String userId);
     public int getTotalCount(Criteria cri);

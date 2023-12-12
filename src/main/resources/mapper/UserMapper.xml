@@ -37,21 +37,12 @@
                      #{enable}
                  )
     </insert>
+    <insert id="createRole" parameterType="java.lang.String">
+        INSERT INTO USER_ROLE (USER_ID, ROLE_ID) VALUES (#{userId}, 1)
+    </insert>
 
 
 
-
-<!--    <select id="getUserDetail" parameterType="java.lang.String" resultType="hyundai.cc.usermanage.user.dto.UserDTO">-->
-<!--        SELECT  id,-->
-<!--                email,-->
-<!--                PASSWORD,-->
-<!--                username,-->
-<!--                nickname,-->
-<!--                content,-->
-<!--                createDate-->
-<!--        FROM USER_INFO-->
-<!--        WHERE ID = #{id}-->
-<!--    </select>-->
 
     <resultMap id="userResultMap" type="hyundai.cc.usermanage.user.dto.UserDTO">
         <id property="id" column="ID"/>

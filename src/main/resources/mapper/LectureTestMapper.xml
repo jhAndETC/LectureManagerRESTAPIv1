@@ -81,17 +81,17 @@
     <update id="updateLecture">
         <![CDATA[
         UPDATE LECTURE
-        SET CENTERID= #{centerId, jdbcType=NUMERIC},
-            TITLE=#{title, jdbcType=VARCHAR},
-            LECTURERID= #{lecturerId, jdbcType=VARCHAR},
-            LECTURETIME=#{lectureTime, jdbcType=VARCHAR},
-            LOCATION=#{location, jdbcType=VARCHAR},
-            STARTDATE=#{startDate, jdbcType=DATE},
-            ENDDATE=#{endDate, jdbcType=DATE},
-            LECTURECOUNT=#{lectureCount, jdbcType=NUMERIC},
-            PRICE=#{price, jdbcType=NUMERIC},
-            DESCRIPTION=#{description, jdbcType=CLOB},
-            CATEGORYID= #{categoryId, jdbcType=NUMERIC}
+        SET CENTERID= #{lecture.centerId, jdbcType=NUMERIC},
+            TITLE=#{lecture.title, jdbcType=VARCHAR},
+            LECTURERID= #{lecture.lecturerId, jdbcType=VARCHAR},
+            LECTURETIME=#{lecture.lectureTime, jdbcType=VARCHAR},
+            LOCATION=#{lecture.location, jdbcType=VARCHAR},
+            STARTDATE=#{lecture.startDate, jdbcType=DATE},
+            ENDDATE=#{lecture.endDate, jdbcType=DATE},
+            LECTURECOUNT=#{lecture.lectureCount, jdbcType=NUMERIC},
+            PRICE=#{lecture.price, jdbcType=NUMERIC},
+            DESCRIPTION=#{lecture.description, jdbcType=CLOB},
+            CATEGORYID= #{lecture.categoryId, jdbcType=NUMERIC}
         WHERE LECTUREID = #{id}
         ]]>
     </update>

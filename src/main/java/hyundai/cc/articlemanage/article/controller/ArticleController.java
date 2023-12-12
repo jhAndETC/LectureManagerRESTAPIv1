@@ -1,19 +1,15 @@
 package hyundai.cc.articlemanage.article.controller;
 
-import hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.service.ArticleService;
-import hyundai.cc.articlemanage.article.service.FileUploadService;
 import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.filemanage.file.controller.FileController;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 

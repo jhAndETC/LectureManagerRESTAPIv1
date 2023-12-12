@@ -11,5 +11,6 @@ public interface ArticleService {
     public HashMap<String, Object> getArticleListByLectureWithPagination(ArticleCriteria articleCriteria) throws Exception;
     public ArticleDTO getArticleDetail(long articleId) throws Exception;
     public int getTotal(long lectureId) throws Exception;
+    public void updateHits(long articleId) throws Exception;
 
 }

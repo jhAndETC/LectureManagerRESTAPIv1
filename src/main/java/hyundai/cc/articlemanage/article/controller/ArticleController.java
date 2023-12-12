@@ -69,20 +69,26 @@ public class ArticleController {
     @GetMapping()
     public ResponseEntity<?> getArticleListByLecture(@RequestParam long lecId,
                                                      @RequestParam(required = false) Integer cursor,
-                                                     @RequestParam(defaultValue="10") Integer amount){
+                                                     @RequestParam(defaultValue="10") Integer amount) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
+        int total = articleService.getTotal(lecId);
+        map.put("total", total);
+        map.put("data", null);
+        if (cursor != null){
+            map.put("currentCursor", cursor);
+        } else {
+            map.put("currentCursor", null);
+        }
+        map.put("next", null);
+        map.put("amount", amount);
         try{
-            int total = articleService.getTotal(lecId);
             ArticleCriteria articleCriteria = new ArticleCriteria(lecId, cursor, amount);
             log.info("articleController, articleCriteria: " + articleCriteria.toString());
             HashMap<String, Object> articleListByLecture = articleService.getArticleListByLectureWithPagination(articleCriteria);
             log.info(articleListByLecture.toString());
-
-            map.put("total", total);
-            map.put("data", articleListByLecture.get("articleDTOList"));
-            map.put("currentCursor", cursor);
-            map.put("next", articleListByLecture.get("next"));
-            map.put("amount", amount);
+            map.replace("data", articleListByLecture.get("articleDTOList"));
+            map.replace("currentCursor", cursor);
+            map.replace("next", articleListByLecture.get("next"));
         } catch (Exception e){
             log.info(e.getMessage());
         }
@@ -94,6 +100,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public ResponseEntity<?> getArticleDetail(@PathVariable long articleId){
         try{
+            articleService.updateHits(articleId);
             ArticleDTO articleDetail = articleService.getArticleDetail(articleId);
             log.info(articleDetail.toString());
             return new ResponseEntity<>(articleDetail, HttpStatus.OK);

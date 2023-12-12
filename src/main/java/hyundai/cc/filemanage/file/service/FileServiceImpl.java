@@ -113,15 +113,5 @@ public class FileServiceImpl implements FileService {
         return result;
     }
 
-    @Override
-    public Resource downloadFile(String userAgent, String fileName) throws Exception {
-        return null;
-    }
-
-    @Override
-    public String deleteFile(String fileName, String type) throws Exception {
-        return null;
-    }
-
 
 }

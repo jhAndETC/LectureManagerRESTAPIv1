@@ -82,7 +82,7 @@ public class ArticleController {
             HashMap<String, Object> articleListByLecture = articleService.getArticleListByLectureWithPagination(articleCriteria);
             log.info(articleListByLecture.toString());
 
-            map.put("Total", total);
+            map.put("total", total);
             map.put("data", articleListByLecture.get("articleDTOList"));
             map.put("currentCursor", cursor);
             map.put("next", articleListByLecture.get("next"));

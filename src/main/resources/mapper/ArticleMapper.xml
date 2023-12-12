@@ -83,4 +83,8 @@
         select count(ARTICLEID) from article where lectureid=#{lectureId}
     </select>
 
+    <update id="updateHits" parameterType="_long">
+        update ARTICLE set VIEWS = VIEWS + 1 where ARTICLEID=#{articleId}
+    </update>
+
 </mapper>

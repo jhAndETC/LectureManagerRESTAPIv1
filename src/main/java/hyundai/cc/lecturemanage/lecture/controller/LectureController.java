@@ -1,6 +1,9 @@
 package hyundai.cc.lecturemanage.lecture.controller;
 
 
+import hyundai.cc.articlemanage.article.dto.ArticleDTO;
+import hyundai.cc.articlemanage.article.service.ArticleService;
+import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.domain.Criteria;
 import hyundai.cc.domain.PageDTO;
 import hyundai.cc.lecturemanage.lecture.dto.LectureCreateRequestDTO;
@@ -8,23 +11,25 @@ import hyundai.cc.lecturemanage.lecture.dto.LectureDTOMapper;
 import hyundai.cc.lecturemanage.lecture.service.LectureService;
 import hyundai.cc.lecturemanage.lecture.service.MockLectureServiceImpl;
 import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTOMapper;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-
+@Log
 @RestController
 @RequestMapping("lectures")
 public class LectureController {
+    private final ArticleService articleService;
     private final LectureService lectureservice;
     private final LectureDTOMapper lecturedtoMapper;
     private final LecturerDTOMapper lecturerDTOMapper;
-    public LectureController(MockLectureServiceImpl lectureservice, LectureDTOMapper lecturedtoMapper, LecturerDTOMapper lecturerDTOMapper) {
+    public LectureController(ArticleService articleService, MockLectureServiceImpl lectureservice, LectureDTOMapper lecturedtoMapper, LecturerDTOMapper lecturerDTOMapper) {
+        this.articleService = articleService;
         this.lectureservice = lectureservice;
         this.lecturedtoMapper = lecturedtoMapper;
         this.lecturerDTOMapper = lecturerDTOMapper;
@@ -66,11 +71,50 @@ public class LectureController {
     }
 
 
-    //lectures/3/community 강의 커뮤니티
-//    @GetMapping("/{lectureId}/community")
-//    public ResponseEntity<?> getLecturePosts(@PathVariable Long lectureId) {
-//        return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.getLecturePosts(lectureId)));
-//    }
+    @GetMapping("/{lecId}/community")
+    public ResponseEntity<?> getArticleListByLecture(@PathVariable Long lecId,@RequestParam(required = false) Integer cursor,
+                                                     @RequestParam(defaultValue="10") Integer amount) throws Exception {
+        HashMap<String, Object> map = new HashMap<>();
+        int total = articleService.getTotal(lecId);
+        map.put("total", total);
+        map.put("data", null);
+        if (cursor != null){
+            map.put("currentCursor", cursor);
+        } else {
+            map.put("currentCursor", null);
+        }
+        map.put("next", null);
+        map.put("amount", amount);
+        try{
+            ArticleCriteria articleCriteria = new ArticleCriteria(lecId, cursor, amount);
+            log.info("articleController, articleCriteria: " + articleCriteria.toString());
+            HashMap<String, Object> articleListByLecture = articleService.getArticleListByLectureWithPagination(articleCriteria);
+            log.info(articleListByLecture.toString());
+            map.replace("data", articleListByLecture.get("articleDTOList"));
+            map.replace("currentCursor", cursor);
+            map.replace("next", articleListByLecture.get("next"));
+        } catch (Exception e){
+            log.info(e.getMessage());
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/{lecId}/community/{articleId}")
+    public ResponseEntity<?> getArticleDetail(@PathVariable long lecId, @PathVariable long articleId){
+        try{
+            articleService.updateHits(articleId);
+            ArticleDTO articleDetail = articleService.getArticleDetail(articleId);
+            if(articleDetail.getLectureId()!=lecId){
+                return new ResponseEntity<>("해당 강좌의 게시글이 아닙니다." + articleId, HttpStatus.NOT_FOUND);
+            }
+            log.info(articleDetail.toString());
+            return new ResponseEntity<>(articleDetail, HttpStatus.OK);
+        } catch (Exception e){
+            log.warning(e.getMessage());
+            return new ResponseEntity<>("can't find article detail" + articleId, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
     //admin/lectures

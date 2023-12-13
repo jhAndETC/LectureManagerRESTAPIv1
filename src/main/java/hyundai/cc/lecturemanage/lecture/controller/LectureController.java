@@ -129,12 +129,12 @@ public class LectureController {
     }
     @GetMapping("/{lecId}/community/{articleId}/comments")
     public ResponseEntity<?> getReply(@PathVariable long articleId){
-        return new ResponseEntity<>(replyservice.getReply(articleId),HttpStatus.OK);
-//        try{
-//            return new ResponseEntity<>(replyservice.getReply(articleId),HttpStatus.OK);
-//        }catch (Exception ex){
-//            return ResponseEntity.badRequest().build();
-//        }
+
+        try{
+            return new ResponseEntity<>(replyservice.getReply(articleId),HttpStatus.OK);
+        }catch (Exception ex){
+            return ResponseEntity.badRequest().build();
+        }
     }
     @GetMapping("/{lecId}/community/{articleId}/comments/{parentId}")
     public ResponseEntity<?> getReReply(@PathVariable Long parentId){
@@ -153,6 +153,18 @@ public class LectureController {
         String userId = userservice.getUuidByEmail(currentEmail);
         try{
             replyservice.createReReply(articleId,userId,parentId,content);
+            return ResponseEntity.ok().build();
+        }catch (Exception ex){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/{lecId}/community/{articleId}/comments")
+    public ResponseEntity<?> createReply(@PathVariable long articleId, Principal principal, @RequestBody ReplyCreateDTO content){
+        String currentEmail=principal.getName();
+        String userId = userservice.getUuidByEmail(currentEmail);
+        try{
+            replyservice.createReply(articleId,userId,content);
             return ResponseEntity.ok().build();
         }catch (Exception ex){
             return ResponseEntity.badRequest().build();

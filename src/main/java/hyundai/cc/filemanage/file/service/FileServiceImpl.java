@@ -1,11 +1,11 @@
 package hyundai.cc.filemanage.file.service;
 
-import hyundai.cc.filemanage.file.domain.AttachFileDTO;
+import hyundai.cc.filemanage.file.controller.BucketController;
+import hyundai.cc.filemanage.file.dto.AttachFileDTO;
+import hyundai.cc.filemanage.mapper.FileMapper;
 import lombok.extern.java.Log;
-import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -30,6 +29,14 @@ public class FileServiceImpl implements FileService {
 
     @Value("azure-blob://jhandetc/")
     private String uploadFolder;
+
+    private final BucketController bucketController;
+    private final FileMapper fileMapper;
+
+    public FileServiceImpl(BucketController bucketController, FileMapper fileMapper) {
+        this.bucketController = bucketController;
+        this.fileMapper = fileMapper;
+    }
 
     private String getFolder() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -50,18 +57,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<AttachFileDTO> upload(MultipartFile[] uploadFile) throws Exception {
+    public List<AttachFileDTO> upload(String type, String id, MultipartFile[] uploadFile) throws Exception {
         List<AttachFileDTO> list = new ArrayList<>();
-
-        // make folder -------
-        File uploadPath = new File(uploadFolder, getFolder());
-        log.info("upload path: " + uploadPath);
-
-        if (uploadPath.exists() == false) {
-            uploadPath.mkdirs();
-        }  // make yyyy/mm/dd folder
-
-        log.info(uploadFile.toString());
 
         for (MultipartFile multipartFile : uploadFile) {
             log.info("----------------");
@@ -73,24 +70,21 @@ public class FileServiceImpl implements FileService {
             UUID uuid = UUID.randomUUID();
             uploadFileName = uuid.toString() + "_" + uploadFileName;
             attachFileDTO.setFileName(uploadFileName);
+            String contentType = multipartFile.getContentType();
+            log.info("FileServiceImpl contentType: " + contentType);
+            attachFileDTO.setAttachType(contentType);
+            attachFileDTO.setByteSize(multipartFile.getSize());
 
             try {
-                File saveFile = new File(uploadPath, uploadFileName);
-                multipartFile.transferTo(saveFile);
-                attachFileDTO.setUuid(uuid.toString());
-                attachFileDTO.setUploadPath(uploadFileName);
-
-                // check image type file
-                if (checkImageType(saveFile)) {
-                    FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
-                    Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
-                    thumbnail.close();
-
-                    attachFileDTO.setImage(true);
-                }
-
+                String FileURL = bucketController.UploadObject(type, id,uploadFileName, contentType, multipartFile);
+                attachFileDTO.setUploadPath(FileURL);
                 // add to List
                 list.add(attachFileDTO);
+                try{
+                    fileMapper.uploadFileToDB(attachFileDTO);
+                } catch (Exception e){
+                    log.info(e.getMessage());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -111,6 +105,15 @@ public class FileServiceImpl implements FileService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public void uploadFileToDB(AttachFileDTO attachFileDTO) throws Exception {
+        try{
+            fileMapper.uploadFileToDB(attachFileDTO);
+        } catch (Exception e){
+            log.info(e.getMessage());
+        }
     }
 
 

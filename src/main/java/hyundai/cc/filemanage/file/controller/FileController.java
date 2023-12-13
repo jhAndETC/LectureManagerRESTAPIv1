@@ -1,6 +1,6 @@
 package hyundai.cc.filemanage.file.controller;
 
-import hyundai.cc.filemanage.file.domain.AttachFileDTO;
+import hyundai.cc.filemanage.file.dto.AttachFileDTO;
 import hyundai.cc.filemanage.file.service.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -11,21 +11,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.file.Files;
 import java.util.List;
 
 @Log
 @RestController
-@RequestMapping("blob")
+@RequestMapping("files")
 @PropertySource("classpath:app.properties")
 public class FileController {
     @Value("azure-blob://jhandetc/")
@@ -39,10 +36,11 @@ public class FileController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> upload(MultipartFile[] uploadFile) throws Exception {
+    public ResponseEntity<?> upload(@RequestParam String type, @RequestParam String id,
+                                    MultipartFile[] uploadFile) throws Exception {
         log.info("upload");
         try {
-            List<AttachFileDTO> list = fileService.upload(uploadFile);
+            List<AttachFileDTO> list = fileService.upload(type, id, uploadFile);
             log.info("File Controller: " + list.toString());
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception e) {

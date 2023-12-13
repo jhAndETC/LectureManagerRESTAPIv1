@@ -1,5 +1,6 @@
 package hyundai.cc.articlemanage.article.controller;
 
+import hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.service.ArticleService;
@@ -19,30 +20,26 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final ArticleDTOMapper articleDTOMapper;
-    private final FileController fileController;
 
     public ArticleController(ArticleService articleService,
                              ArticleDTOMapper articleDTOMapper,
                              FileController fileController) {
         this.articleService = articleService;
-        this.articleDTOMapper = articleDTOMapper;
-        this.fileController = fileController;
     }
 
      // (생성) 게시글 작성
-//    @PostMapping()
-//    public ResponseEntity<?> createArticle(@RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
-//        try{
-//            // 파일 첨부 시 파일 업로드
-//            if (articleCreateRequestDTO.getUploadFile() != null) {
-//                fileController.upload(articleCreateRequestDTO.getUploadFile());
-//            }
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            return new ResponseEntity<>("insert Error", HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @PostMapping()
+    public ResponseEntity<?> createArticle(@RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
+        try{
+            // article db 업로드
+            articleService.createArticle(articleCreateRequestDTO);
+            // 파일 첨부 시 파일 업로드
+            return new ResponseEntity<>("create article" + articleCreateRequestDTO.getTitle().toString(), HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("insert Error", HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/link")
     public ResponseEntity<String> checkLink() throws Exception {
@@ -110,5 +107,34 @@ public class ArticleController {
         }
 
     }
+
+    // 수정
+    @PutMapping
+    public ResponseEntity<?> updateArticle(@RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
+        try{
+            // article db 업로드
+            articleService.updateArticle(articleCreateRequestDTO);
+            // 파일 첨부 시 파일 업로드
+            return new ResponseEntity<>("update article" + articleCreateRequestDTO.getTitle().toString(), HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("update Error", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteArticle(@RequestParam long articleId, @RequestParam String writerId){
+        try{
+            // article db 업로드
+            articleService.deleteArticle(articleId, writerId);
+            // 파일 첨부 시 파일 업로드
+            return new ResponseEntity<>("delete article" + articleId, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("delete Error", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hyundai.cc.filemanage.mapper.FileMapper">
+
+    <insert id="uploadFileToDB" parameterType="hyundai.cc.filemanage.file.dto.AttachFileDTO">
+        insert into FILE_INFO
+            (ATTACH_TYPE, BYTE_SIZE, NAME, URL)
+        values (file_info_seq.nextval, #{attachType}, #{byteSize}, #{fileName}, #{uploadPath})
+    </insert>
+
+</mapper>

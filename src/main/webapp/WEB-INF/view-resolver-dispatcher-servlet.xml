@@ -44,7 +44,11 @@
     </bean>
 
 
-    <mybatis-spring:scan base-package="hyundai.cc.usermanage.user.mapper, hyundai.cc.articlemanage.article.mapper,hyundai.cc.lecturemanage.lecture.mapper" />
+    <mybatis-spring:scan
+            base-package="hyundai.cc.usermanage.user.mapper,
+                          hyundai.cc.articlemanage.article.mapper,
+                          hyundai.cc.lecturemanage.lecture.mapper,
+                          hyundai.cc.filemanage.mapper" />
 
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>

@@ -22,7 +22,6 @@ public class ArticleDTO implements Serializable {
     private Date updateDate;
     private long views;
     private long is_notice;
-    private String fileUrl;
     private String writerNickname;
     private long lectureId;
     private String lectureTitle;

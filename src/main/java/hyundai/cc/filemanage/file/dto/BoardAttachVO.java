@@ -1,4 +1,4 @@
-package hyundai.cc.filemanage.file.domain;
+package hyundai.cc.filemanage.file.dto;
 
 import lombok.Data;
 

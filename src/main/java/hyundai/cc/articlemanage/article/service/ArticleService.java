@@ -1,5 +1,6 @@
 package hyundai.cc.articlemanage.article.service;
 
+import hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.domain.ArticleCriteria;
 
@@ -12,5 +13,8 @@ public interface ArticleService {
     public ArticleDTO getArticleDetail(long articleId) throws Exception;
     public int getTotal(long lectureId) throws Exception;
     public void updateHits(long articleId) throws Exception;
+    public void createArticle(ArticleCreateRequestDTO articleCreateRequestDTO) throws Exception;
+    public void updateArticle(ArticleCreateRequestDTO articleCreateRequestDTO) throws Exception;
+    public void deleteArticle(long articleId, String writerId) throws Exception;
 
 }

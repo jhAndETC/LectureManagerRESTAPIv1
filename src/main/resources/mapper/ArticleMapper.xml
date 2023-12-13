@@ -7,12 +7,10 @@
     <select id="getAllArticleList" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         select a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-            nvl(f.URL, '') as fileUrl,
             nvl(u.NICKNAME, '') as writerNickname,
             a.lectureId as lectureId,
             nvl(l.TITLE, '') as lectureTitle
         from article a
-        left outer join FILE_INFO f on a.FILEID = f.FILEID
         left outer join USER_INFO u on a.WRITERID = u.id
         left outer join LECTURE l on a.lectureid = l.LECTUREID
         order by ARTICLEID desc
@@ -22,18 +20,16 @@
     <select id="getArticleListByLectureWithPaginationFirst" parameterType="hyundai.cc.domain.ArticleCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-               NVL(f.URL, 'file null') AS fileUrl,
                NVL(u.NICKNAME, 'nickname null') AS writerNickname,
                a.lectureId as lectureId,
                NVL(l.TITLE, 'lecture title null') AS lectureTitle
         FROM (
                  SELECT articleId, title, content, regdate, updateDate, views, is_notice,
-                        FILEID, WRITERID, LECTUREID,
+                        WRITERID, LECTUREID,
                         ROW_NUMBER() OVER (ORDER BY ARTICLEID DESC) AS rnum
                  FROM ARTICLE
                  WHERE LECTUREID = #{lectureId}
              ) a
-                 LEFT OUTER JOIN FILE_INFO f ON a.FILEID = f.FILEID
                  LEFT OUTER JOIN USER_INFO u ON a.WRITERID = u.id
                  LEFT OUTER JOIN LECTURE l ON a.LECTUREID = l.LECTUREID
         WHERE a.rnum <= #{amount}
@@ -44,18 +40,16 @@
     <select id="getArticleListByLectureWithPagination" parameterType="hyundai.cc.domain.ArticleCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-               NVL(f.URL, '') AS fileUrl,
                NVL(u.NICKNAME, '') AS writerNickname,
                a.lectureId as lectureId,
                NVL(l.TITLE, '') AS lectureTitle
         FROM (
                  SELECT articleId, title, content, regdate, updateDate, views, is_notice,
-                        FILEID, WRITERID, LECTUREID,
+                        WRITERID, LECTUREID,
                         ROW_NUMBER() OVER (ORDER BY ARTICLEID DESC) AS rnum
                  FROM ARTICLE
                  WHERE LECTUREID = #{lectureId} and ARTICLEID < #{cursor}
              ) a
-                 LEFT OUTER JOIN FILE_INFO f ON a.FILEID = f.FILEID
                  LEFT OUTER JOIN USER_INFO u ON a.WRITERID = u.id
                  LEFT OUTER JOIN LECTURE l ON a.LECTUREID = l.LECTUREID
         WHERE a.rnum <= #{amount}
@@ -66,12 +60,10 @@
     <select id="getArticleDetail" parameterType="_long" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         select  a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-               nvl(f.URL, 'file null') as fileUrl,
                nvl(u.NICKNAME, 'nickname null') as writerNickname,
                a.lectureId as lectureId,
                nvl(l.TITLE, 'lecture title null') as lectureTitle
         from article a
-                 left outer join FILE_INFO f on a.FILEID = f.FILEID
                  left outer join USER_INFO u on a.WRITERID = u.id
                  left outer join LECTURE l on a.lectureid = l.LECTUREID
         where a.articleId = #{articleId}
@@ -86,5 +78,27 @@
     <update id="updateHits" parameterType="_long">
         update ARTICLE set VIEWS = VIEWS + 1 where ARTICLEID=#{articleId}
     </update>
+
+    <insert id="createArticle" parameterType="hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO">
+        insert into ARTICLE
+        (ARTICLEID, TITLE, CONTENT, WRITERID, LECTUREID)
+        values (articleID_seq.nextval, #{title}, #{content}, #{writerId}, #{lectureId})
+    </insert>
+
+    <update id="updateArticle" parameterType="hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO">
+        update ARTICLE
+        set TITLE = #{title},
+            CONTENT = #{content},
+            UPDATEDATE = sysdate,
+            WRITERID = #{writerId},
+            LECTUREID = #{lectureId}
+        where ARTICLEID=#{articleId}
+    </update>
+
+
+    <delete id="deleteArticle">
+        delete ARTICLE
+        where ARTICLEID = #{articleId} and WRITERID = #{writerId}
+    </delete>
 
 </mapper>

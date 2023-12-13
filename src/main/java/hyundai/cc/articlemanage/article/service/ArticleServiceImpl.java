@@ -1,5 +1,6 @@
 package hyundai.cc.articlemanage.article.service;
 
+import hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO;
 import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.mapper.ArticleMapper;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
@@ -92,6 +93,33 @@ public class ArticleServiceImpl implements ArticleService{
         try{
             articleMapper.updateHits(articleId);
         } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Override
+    public void createArticle(ArticleCreateRequestDTO articleCreateRequestDTO) throws Exception {
+        try{
+            articleMapper.createArticle(articleCreateRequestDTO);
+        } catch (Exception e){
+            log.info(e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateArticle(ArticleCreateRequestDTO articleCreateRequestDTO) throws Exception {
+        try{
+            articleMapper.updateArticle(articleCreateRequestDTO);
+        } catch (Exception e){
+            log.info(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteArticle(long articleId, String writerId) throws Exception {
+        try{
+            articleMapper.deleteArticle(articleId, writerId);
+        } catch (Exception e){
             log.info(e.getMessage());
         }
     }

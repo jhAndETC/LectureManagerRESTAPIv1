@@ -47,6 +47,7 @@
     <mybatis-spring:scan
             base-package="hyundai.cc.usermanage.user.mapper,
                           hyundai.cc.articlemanage.article.mapper,
+                          hyundai.cc.articlemanage.reply.mapper,
                           hyundai.cc.lecturemanage.lecture.mapper,
                           hyundai.cc.filemanage.mapper" />
 

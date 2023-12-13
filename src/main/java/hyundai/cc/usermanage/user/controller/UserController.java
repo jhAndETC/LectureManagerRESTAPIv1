@@ -9,16 +9,20 @@ import hyundai.cc.lecturemanage.lecture.service.LectureService;
 import hyundai.cc.usermanage.user.dto.*;
 import hyundai.cc.usermanage.user.service.MockUserServiceImpl;
 import hyundai.cc.usermanage.user.service.UserService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Log
 @RestController
 @RequestMapping("users")
 public class UserController {
@@ -47,7 +51,6 @@ public class UserController {
         HashMap<String,Object> map=new HashMap<>();
         map.put("next",page.isNext());
         map.put("prev",page.isPrev());
-        //map.put("startpage",page.getStartPage());
         map.put("totalPages",page.getEndPage());
         map.put("currentPage",cri.getPageNum());
         map.put("itemsPerPage",cri.getAmount());
@@ -68,23 +71,25 @@ public class UserController {
 //    }
 
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponseDTO> getUserDetail(@PathVariable String userId) {
+    @GetMapping("/account")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<UserResponseDTO> getUserDetail(Principal principal) {
+        String currentEmail = principal.getName();
+        String userId = userservice.getUuidByEmail(currentEmail);
         return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.getUserDetail(userId)));
     }
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<?> getUserDetail(@PathVariable String userId) {
-//        return ResponseEntity.ok(userservice.getUserDetail(userId));
-//    }
 
-    @GetMapping("/{userId}/lectures/progress")
-    public ResponseEntity<?> findProgressCourses(@PathVariable String userId,Criteria cri){
+
+    @GetMapping("/account/lectures/progress")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> findProgressCourses(Principal principal,Criteria cri){
+        String currentEmail = principal.getName();
+        String userId = userservice.getUuidByEmail(currentEmail);
         int total = userservice.getProgressCount(userId,cri);
         PageDTO page=new PageDTO(cri, total);
         HashMap<String,Object> map=new HashMap<>();
         map.put("next",page.isNext());
         map.put("prev",page.isPrev());
-        //map.put("startpage",page.getStartPage());
         map.put("totalPages",page.getEndPage());
         map.put("currentPage",cri.getPageNum());
         map.put("itemsPerPage",cri.getAmount());
@@ -96,8 +101,11 @@ public class UserController {
     }
 
 
-    @GetMapping("/{userId}/lectures/finish")
-    public ResponseEntity<?> findFinishCourses(@PathVariable String userId,Criteria cri){
+    @GetMapping("/account/lectures/finish")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<?> findFinishCourses(Principal principal,Criteria cri){
+        String currentEmail = principal.getName();
+        String userId = userservice.getUuidByEmail(currentEmail);
         int total = userservice.getFinishCount(userId,cri);
         PageDTO page=new PageDTO(cri, total);
         HashMap<String,Object> map=new HashMap<>();
@@ -114,14 +122,16 @@ public class UserController {
 
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
-    @GetMapping("/{userId}/lectures/keep")
-    public ResponseEntity<?> findLikedCourses(@PathVariable String userId,Criteria cri){
+    @GetMapping("/account/lectures/keep")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<?> findLikedCourses(Principal principal,Criteria cri){
+        String currentEmail = principal.getName();
+        String userId = userservice.getUuidByEmail(currentEmail);
         int total = userservice.getLikedCount(userId,cri);
         PageDTO page=new PageDTO(cri, total);
         HashMap<String,Object> map=new HashMap<>();
         map.put("next",page.isNext());
         map.put("prev",page.isPrev());
-        //map.put("startpage",page.getStartPage());
         map.put("totalPages",page.getEndPage());
         map.put("currentPage",cri.getPageNum());
         map.put("itemsPerPage",cri.getAmount());

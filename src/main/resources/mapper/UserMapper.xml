@@ -42,7 +42,9 @@
     </insert>
 
 
-
+    <select id="selectUuidByEmail" resultType="String">
+        SELECT ID FROM USER_INFO WHERE EMAIL = #{email}
+    </select>
 
     <resultMap id="userResultMap" type="hyundai.cc.usermanage.user.dto.UserDTO">
         <id property="id" column="ID"/>
@@ -155,29 +157,31 @@
     <!-- 수강 중인 과목 조회 -->
     <select id="findProgressCourses" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">
         SELECT
-        l.LECTUREID AS lectureId,
-        l.TITLE AS title,
-        l.LECTURERID AS lecturerId,
-        u.USERNAME AS lecturerName,
+            l.LECTUREID AS lectureId,
+            l.TITLE AS title,
+            l.LECTURERID AS lecturerId,
+            u.USERNAME AS lecturerName,
 --         le.INTRODUCTION AS lecturerIntroduction,
-        c.NAME AS centerName,
-        l.LECTURETIME AS lectureTime,
-        l.LOCATION AS location,
-        l.STARTDATE AS startDate,
-        l.ENDDATE AS endDate,
-        l.LECTURECOUNT AS lectureCount,
-        l.PRICE AS price,
-        l.DESCRIPTION AS description,
-        l.CATEGORYID AS categoryId
+            c.NAME AS centerName,
+            l.LECTURETIME AS lectureTime,
+            l.LOCATION AS location,
+            l.STARTDATE AS startDate,
+            l.ENDDATE AS endDate,
+            l.LECTURECOUNT AS lectureCount,
+            l.PRICE AS price,
+            l.DESCRIPTION AS description,
+            l.CATEGORYID AS categoryId,
+            g.CATEGORYNAME as categoryName
         FROM
-        ENROLLMENT e
-        INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
-        INNER JOIN LECTURER le ON l.LECTURERID = le.ID
-        INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
-        INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+            ENROLLMENT e
+                INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
+                INNER JOIN LECTURER le ON l.LECTURERID = le.ID
+                INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
+                INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+                left join CATEGORY g on l.CATEGORYID=g.CATEGORYID
         WHERE
-         e.USER_ID = #{id}
-        AND e.IS_FINISHED = 0
+            e.USER_ID = #{id}
+          AND e.IS_FINISHED = 0
         order by l.LECTUREID
         offset (#{cri.pageNum}-1) * #{cri.amount} ROWS FETCH NEXT #{cri.amount} ROWS ONLY
     </select>
@@ -199,13 +203,15 @@
         l.LECTURECOUNT AS lectureCount,
         l.PRICE AS price,
         l.DESCRIPTION AS description,
-        l.CATEGORYID AS categoryId
+        l.CATEGORYID AS categoryId,
+        g.CATEGORYNAME as categoryName
         FROM
         ENROLLMENT e
         INNER JOIN LECTURE l ON e.LECTURE_ID = l.LECTUREID
         INNER JOIN LECTURER le ON l.LECTURERID = le.ID
         INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
         INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+        LEFT JOIN CATEGORY g ON l.CATEGORYID = g.CATEGORYID
         WHERE
             e.USER_ID = #{id}
             AND e.IS_FINISHED = 1
@@ -229,13 +235,15 @@
             l.LECTURECOUNT AS lectureCount,
             l.PRICE AS price,
             l.DESCRIPTION AS description,
-            l.CATEGORYID AS categoryId
+            l.CATEGORYID AS categoryId,
+            g.CATEGORYNAME AS categoryName
         FROM
             LIKES li
                 JOIN LECTURE l ON li.LECTUREID = l.LECTUREID
                 JOIN LECTURER le ON l.LECTURERID = le.ID
                 JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
                 JOIN USER_INFO u ON le.USER_ID = u.ID
+                LEFT JOIN CATEGORY g ON l.CATEGORYID = g.CATEGORYID
         WHERE
             li.USERID = #{id}
         order by l.LECTUREID

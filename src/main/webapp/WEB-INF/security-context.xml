@@ -11,19 +11,22 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-
     <bean id ="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <bean id="customAuthenticationFailureHandler" class="hyundai.cc.exception.CustomAuthenticationFailureHandler"></bean>
     <security:global-method-security
         pre-post-annotations="enabled"
         secured-annotations="enabled"/>
 
     <security:http auto-config="false">
-
-        <security:intercept-url pattern="/" access="permitAll"/>
-        <security:intercept-url pattern="/admin" access="hasRole('ADMIN')"/>
+        <security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
         <security:intercept-url pattern="/users/**" access="hasRole('USER')"/>
+        <security:intercept-url pattern="/**" access="permitAll"/>
         <security:http-basic/>
-        <security:form-login/>
+        <security:form-login
+                username-parameter="email"
+                password-parameter="password"
+                authentication-failure-handler-ref="customAuthenticationFailureHandler"/>
+
 <!--        <security:logout-->
 <!--                logout-url="/logout"-->
 <!--                logout-success-url="/"-->
@@ -35,6 +38,8 @@
         </security:session-management>
         <security:csrf disabled="true"></security:csrf>
     </security:http>
+
+
 
 
     <security:authentication-manager>

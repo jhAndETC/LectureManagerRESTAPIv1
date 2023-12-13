@@ -6,12 +6,16 @@ import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.service.ArticleService;
 import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.filemanage.file.controller.FileController;
+import hyundai.cc.usermanage.user.dto.UserDTO;
+import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,17 +25,22 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final UserService userservice;
 
     public ArticleController(ArticleService articleService,
-                             ArticleDTOMapper articleDTOMapper,
-                             FileController fileController) {
+                             UserService userservice) {
         this.articleService = articleService;
+        this.userservice = userservice;
     }
 
      // (생성) 게시글 작성
     @PostMapping()
-    public ResponseEntity<?> createArticle(@RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> createArticle(Principal principal, @RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
         try{
+            String currentEmail = principal.getName();
+            String userId = userservice.getUuidByEmail(currentEmail);
+            articleCreateRequestDTO.setWriterId(userId);
             // article db 업로드
             articleService.createArticle(articleCreateRequestDTO);
             log.info("생성된 article Id: " + articleCreateRequestDTO.getArticleId());
@@ -115,8 +124,12 @@ public class ArticleController {
 
     // 수정
     @PutMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> updateArticle(@RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> updateArticle(Principal principal, @RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
         try{
+            String currentEmail = principal.getName();
+            String userId = userservice.getUuidByEmail(currentEmail);
+            articleCreateRequestDTO.setWriterId(userId);
             // article db 업로드
             articleService.updateArticle(articleCreateRequestDTO);
             // 파일 첨부 시 파일 업로드
@@ -128,11 +141,13 @@ public class ArticleController {
     }
 
     @DeleteMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> deleteArticle(@RequestParam long articleId, @RequestParam String writerId){
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> deleteArticle(@RequestParam long articleId, Principal principal){
         try{
-            // article db 업로드
-            articleService.deleteArticle(articleId, writerId);
-            // 파일 첨부 시 파일 업로드
+            String currentEmail = principal.getName();
+            String userId = userservice.getUuidByEmail(currentEmail);
+            // article db 삭제
+            articleService.deleteArticle(articleId, userId);
             return new ResponseEntity<>("delete article" + articleId, HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();

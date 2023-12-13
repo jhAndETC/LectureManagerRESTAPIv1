@@ -7,7 +7,7 @@
     <select id="getAllArticleList" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         select a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-            nvl(u.NICKNAME, '') as writerNickname,
+            a.WRITERID,
             a.lectureId as lectureId,
             nvl(l.TITLE, '') as lectureTitle
         from article a
@@ -20,7 +20,7 @@
     <select id="getArticleListByLectureWithPaginationFirst" parameterType="hyundai.cc.domain.ArticleCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-               NVL(u.NICKNAME, 'nickname null') AS writerNickname,
+               a.WRITERID,
                a.lectureId as lectureId,
                NVL(l.TITLE, 'lecture title null') AS lectureTitle
         FROM (
@@ -40,7 +40,7 @@
     <select id="getArticleListByLectureWithPagination" parameterType="hyundai.cc.domain.ArticleCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-               NVL(u.NICKNAME, '') AS writerNickname,
+               a.WRITERID,
                a.lectureId as lectureId,
                NVL(l.TITLE, '') AS lectureTitle
         FROM (
@@ -60,7 +60,7 @@
     <select id="getArticleDetail" parameterType="_long" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
         <![CDATA[
         select  a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
-               nvl(u.NICKNAME, 'nickname null') as writerNickname,
+                a.WRITERID,
                a.lectureId as lectureId,
                nvl(l.TITLE, 'lecture title null') as lectureTitle
         from article a

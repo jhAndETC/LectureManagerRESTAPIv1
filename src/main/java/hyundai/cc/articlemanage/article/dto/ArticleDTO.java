@@ -1,6 +1,7 @@
 package hyundai.cc.articlemanage.article.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import hyundai.cc.usermanage.user.dto.UserDTO;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,8 @@ public class ArticleDTO implements Serializable {
     private Date updateDate;
     private long views;
     private long is_notice;
-    private String writerNickname;
+    private String writerId;
+    private UserDTO userDTO;
     private long lectureId;
     private String lectureTitle;
 

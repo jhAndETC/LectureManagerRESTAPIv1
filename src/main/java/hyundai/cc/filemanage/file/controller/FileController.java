@@ -49,7 +49,8 @@ public class FileController {
         }
     }
 
-    @GetMapping("/display")
+    @GetMapping(value = "/display",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseEntity<byte[]> getFile(String fileName) throws Exception {
         log.info("fileName: " + fileName);

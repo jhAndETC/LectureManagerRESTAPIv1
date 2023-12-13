@@ -12,6 +12,7 @@ import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,14 +38,14 @@ public class UserController {
         this.lecturedtoMapper = lecturedtoMapper;
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateRequestDTO cuser) {
         return new ResponseEntity<>(userdtoMapper.toUserResponseDTO(userservice.createUser(cuser)),
                 HttpStatus.CREATED);
     }
 
     //admin 권한
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getUsersByPage(Criteria cri) {
         int total = userservice.getTotal(cri);
         PageDTO page=new PageDTO(cri, total);
@@ -71,7 +72,8 @@ public class UserController {
 //    }
 
 
-    @GetMapping("/account")
+    @GetMapping(value = "/account",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserResponseDTO> getUserDetail(Principal principal) {
         String currentEmail = principal.getName();
@@ -80,7 +82,8 @@ public class UserController {
     }
 
 
-    @GetMapping("/account/lectures/progress")
+    @GetMapping(value = "/account/lectures/progress,",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> findProgressCourses(Principal principal,Criteria cri){
         String currentEmail = principal.getName();
@@ -101,7 +104,8 @@ public class UserController {
     }
 
 
-    @GetMapping("/account/lectures/finish")
+    @GetMapping(value = "/account/lectures/finish",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<?> findFinishCourses(Principal principal,Criteria cri){
         String currentEmail = principal.getName();
@@ -122,7 +126,8 @@ public class UserController {
 
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
-    @GetMapping("/account/lectures/keep")
+    @GetMapping(value = "/account/lectures/keep",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<?> findLikedCourses(Principal principal,Criteria cri){
         String currentEmail = principal.getName();
@@ -155,7 +160,8 @@ public class UserController {
         return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.updateUser(userId,updateDTO)));
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping(value = "/{userId}",
+                   produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteUser(@PathVariable String userId) {
         try {
             userservice.deleteUser(userId);

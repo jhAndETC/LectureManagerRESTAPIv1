@@ -18,6 +18,8 @@ import com.oracle.bmc.objectstorage.transfer.DownloadManager;
 import com.oracle.bmc.objectstorage.transfer.UploadConfiguration;
 import com.oracle.bmc.objectstorage.transfer.UploadManager;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,15 +33,19 @@ import java.util.Map;
 @Log
 @RestController
 @RequestMapping("buckets")
+@PropertySource("classpath:app.properties")
 public class BucketController {
     final String compartmentId = "ocid1.tenancy.oc1..aaaaaaaalzc76alis4w3z7lcviziabckcmowydeojxikdrmdk5of5hr33sgq";
     final String bucket = "bucket-20231211";
     final String namespaceName = "axjmeq566vea";
     final String object = "";
+    @Value("${configPath}")
+    private String configPath;
 
     @GetMapping("/readBucket")
     public void Test() throws IOException {
-        ConfigFileReader.ConfigFile config = ConfigFileReader.parse("~/.oci/config");
+        ConfigFileReader.ConfigFile config = ConfigFileReader.parse(configPath);
+        log.info("readBucket configPath: " + configPath);
 
         AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(config);
 
@@ -78,7 +84,8 @@ public class BucketController {
 
     @GetMapping("/uploadObjectToBucket")
     public String UploadObject(@RequestBody String type, String id, String uploadFileName, String contentType, MultipartFile uploadFile) throws Exception {
-        ConfigFileReader.ConfigFile config = ConfigFileReader.parse("~/.oci/config");
+        ConfigFileReader.ConfigFile config = ConfigFileReader.parse(configPath);
+        log.info("UploadObject configPath: " + configPath);
 
         AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(config);
 
@@ -132,7 +139,8 @@ public class BucketController {
 
     @GetMapping("/getObjectOneTest")
     public void getObjectOneTest(@RequestBody String type, String id, String uploadFileName, String contentType) throws Exception {
-        ConfigFileReader.ConfigFile config = ConfigFileReader.parse("~/.oci/config");
+        ConfigFileReader.ConfigFile config = ConfigFileReader.parse(configPath);
+        log.info("getObjectOneTest configPath: " + configPath);
 
         AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(config);
 
@@ -156,7 +164,7 @@ public class BucketController {
 
     @GetMapping("/getObjectListTest")
     public void getObjectListTest() throws Exception {
-        ConfigFileReader.ConfigFile config = ConfigFileReader.parse("~/.oci/config");
+        ConfigFileReader.ConfigFile config = ConfigFileReader.parse(configPath);
         AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(config);
 
         ObjectStorage client = new ObjectStorageClient(provider);
@@ -191,7 +199,7 @@ public class BucketController {
 
     @GetMapping("/DownloadObjectTest")
     public void DownloadObjectTest(@RequestBody String type, String id, String uploadFileName, String contentType) throws Exception {
-        ConfigFileReader.ConfigFile config = ConfigFileReader.parse("~/.oci/config");
+        ConfigFileReader.ConfigFile config = ConfigFileReader.parse(configPath);
 
         AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(config);
 

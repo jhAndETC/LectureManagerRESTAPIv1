@@ -40,6 +40,7 @@ public class LectureDTOMapper {
     public LectureResponseDTO toLectureResponseDTO(LectureDTO lectureDTO){
         Long lectureId=lectureDTO.getLectureId();
         String title=lectureDTO.getTitle();
+        String lecturerEmail=lectureDTO.getLecturerEmail();
         String lecturerName=lectureDTO.getLecturerName();
 //        String lecturerIntroduction=LectureDTO.getLecturerIntroduction();
         String centerName=lectureDTO.getCenterName();
@@ -50,9 +51,11 @@ public class LectureDTOMapper {
         int lectureCount=lectureDTO.getLectureCount();
         double price=lectureDTO.getPrice();
         String lectureDescription=lectureDTO.getDescription();
+        String categoryName=lectureDTO.getCategoryName();
         return new LectureResponseDTO(
                 lectureId,
                 title,
+                lecturerEmail,
                 lecturerName,
                 centerName,
                 lectureTime,
@@ -61,7 +64,8 @@ public class LectureDTOMapper {
                 location,
                 lectureCount,
                 price,
-                lectureDescription);
+                lectureDescription,
+                categoryName);
 
     }
 }

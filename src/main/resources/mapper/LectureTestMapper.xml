@@ -57,6 +57,7 @@
             l.LECTUREID    AS lectureId,
             l.TITLE        AS title,
             l.LECTURERID   AS lecturerId,
+            U.EMAIL        as lecturerEmail,
             u.USERNAME     AS lecturerName,
             -- le.INTRODUCTION AS lecturerIntroduction,
             c.NAME         AS centerName,
@@ -67,12 +68,14 @@
             l.LECTURECOUNT AS lectureCount,
             l.PRICE        AS price,
             l.DESCRIPTION  AS description,
-            l.CATEGORYID   AS categoryId
+            l.CATEGORYID   AS categoryId,
+            g.CATEGORYNAME AS categoryName
         FROM
             LECTURE l
                 INNER JOIN LECTURER le ON l.LECTURERID = le.ID
                 INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
                 INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+                LEFT JOIN CATEGORY g ON l.CATEGORYID = g.CATEGORYID
         ORDER BY
             l.LECTUREID ASC
         offset (#{pageNum} - 1) * #{amount} ROWS FETCH NEXT #{amount} ROWS ONLY
@@ -112,6 +115,7 @@
             l.LECTUREID    AS lectureId,
             l.TITLE        AS title,
             l.LECTURERID   AS lecturerId,
+            U.EMAIL        as lecturerEmail,
             u.USERNAME     AS lecturerName,
             -- le.INTRODUCTION AS lecturerIntroduction,
             c.NAME         AS centerName,
@@ -122,13 +126,16 @@
             l.LECTURECOUNT AS lectureCount,
             l.PRICE        AS price,
             l.DESCRIPTION  AS description,
-            l.CATEGORYID   AS categoryId
+            l.CATEGORYID   AS categoryId,
+            g.CATEGORYNAME AS categoryName
         FROM
             LECTURE l
                 INNER JOIN LECTURER le ON l.LECTURERID = le.ID
                 INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
                 INNER JOIN USER_INFO u ON le.USER_ID = u.ID
-        WHERE l.LECTUREID = #{lectureId}
+                LEFT JOIN CATEGORY g ON l.CATEGORYID = g.CATEGORYID
+        WHERE
+            l.LECTUREID = #{lectureId}
     </select>
 
     <select id="getLectureList" resultType="hyundai.cc.lecturemanage.lecture.dto.LectureDTO">-->
@@ -136,6 +143,7 @@
         l.LECTUREID    AS lectureId,
         l.TITLE        AS title,
         l.LECTURERID   AS lecturerId,
+        U.EMAIL        as lecturerEmail,
         u.USERNAME     AS lecturerName,
         -- le.INTRODUCTION AS lecturerIntroduction,
         c.NAME         AS centerName,
@@ -146,12 +154,14 @@
         l.LECTURECOUNT AS lectureCount,
         l.PRICE        AS price,
         l.DESCRIPTION  AS description,
-        l.CATEGORYID   AS categoryId
+        l.CATEGORYID   AS categoryId,
+        g.CATEGORYNAME AS categoryName
     FROM
         LECTURE l
             INNER JOIN LECTURER le ON l.LECTURERID = le.ID
             INNER JOIN CENTER_INFO c ON l.CENTERID = c.CENTERID
             INNER JOIN USER_INFO u ON le.USER_ID = u.ID
+            LEFT JOIN CATEGORY g ON l.CATEGORYID = g.CATEGORYID
     ORDER BY
         l.LECTUREID ASC
 

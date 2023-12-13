@@ -11,6 +11,7 @@ import java.util.List;
 public interface UserService {
     public UserDTO createUser(UserCreateRequestDTO user);
     public List<UserDTO> getUserList() ;
+    public String getUuidByEmail(String email);
     public UserDTO getUserDetail(String UserId);
     public UserDTO updateUser(String userId, UserUpdateRequestDTO user);
     public void deleteUser(String userId);

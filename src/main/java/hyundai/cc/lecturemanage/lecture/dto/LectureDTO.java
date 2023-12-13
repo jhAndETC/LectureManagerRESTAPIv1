@@ -17,6 +17,7 @@ public class LectureDTO {
     private Long lectureId;
     private String title;
     private String lecturerId;
+    private String lecturerEmail;
     private String lecturerName;
 //    private String lecturerIntroduction;
     private String centerName;
@@ -28,4 +29,5 @@ public class LectureDTO {
     private double price;
     private String description;
     private Long categoryId;
+    private String categoryName;
 }

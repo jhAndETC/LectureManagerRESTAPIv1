@@ -16,6 +16,7 @@ public class LectureResponseDTO {
 
     private Long id;
     private String title;
+    private String lecturerEmail;
     private String lecturerName;
 //    private String lecturerIntroduction;
     private String centerName;
@@ -28,5 +29,6 @@ public class LectureResponseDTO {
     private int lectureCount;
     private double price;
     private String lectureDescription;
+    private String categoryName;
     //사용자에게 보여지는 정보
 }

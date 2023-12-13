@@ -26,6 +26,7 @@ public interface UserMapper {
     public void createUser(UserCreateDTO user);
     public List<UserDTO> getUserList();
     public List<UserDTO> getUsersByPage(Criteria cri);
+    public String selectUuidByEmail(String email);
     public UserDTO getUserDetail(String userId);
     public void createRole(String userId);
     public void updateUser(@Param("id") String userId, @Param("user") UserCreateDTO user);

@@ -16,6 +16,7 @@ public class LectureResponseDTO {
 
     private Long id;
     private String title;
+    private String lecturerEmail;
     private String lecturerName;
 //    private String lecturerIntroduction;
     private String centerName;

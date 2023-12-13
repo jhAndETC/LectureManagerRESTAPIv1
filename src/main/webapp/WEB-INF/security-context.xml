@@ -13,6 +13,7 @@
 
     <bean id ="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <bean id="customAuthenticationFailureHandler" class="hyundai.cc.exception.CustomAuthenticationFailureHandler"></bean>
+
     <security:global-method-security
         pre-post-annotations="enabled"
         secured-annotations="enabled"/>
@@ -23,9 +24,10 @@
         <security:intercept-url pattern="/**" access="permitAll"/>
         <security:http-basic/>
         <security:form-login
+                authentication-failure-handler-ref="customAuthenticationFailureHandler"
                 username-parameter="email"
                 password-parameter="password"
-                authentication-failure-handler-ref="customAuthenticationFailureHandler"/>
+                />
 
 <!--        <security:logout-->
 <!--                logout-url="/logout"-->

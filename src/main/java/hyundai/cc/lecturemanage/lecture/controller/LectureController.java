@@ -13,6 +13,7 @@ import hyundai.cc.lecturemanage.lecture.service.MockLectureServiceImpl;
 import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTOMapper;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class LectureController {
 
 
     //lecture 강의 목록
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getLecturesByPage(Criteria cri) {
         int total = lectureservice.getTotal(cri);
         PageDTO page=new PageDTO(cri, total);
@@ -59,7 +60,8 @@ public class LectureController {
 
 
     //lectures/3 강의 소개
-    @GetMapping("/{lectureId}")
+    @GetMapping(value = "/{lectureId}",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getLectureDetail(@PathVariable Long lectureId) {
         return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.getLectureDetail(lectureId)));
     }
@@ -71,7 +73,8 @@ public class LectureController {
     }
 
 
-    @GetMapping("/{lecId}/community")
+    @GetMapping(value = "/{lecId}/community",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getArticleListByLecture(@PathVariable Long lecId,@RequestParam(required = false) Integer cursor,
                                                      @RequestParam(defaultValue="10") Integer amount) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
@@ -99,7 +102,8 @@ public class LectureController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @GetMapping("/{lecId}/community/{articleId}")
+    @GetMapping(value = "/{lecId}/community/{articleId}",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getArticleDetail(@PathVariable long lecId, @PathVariable long articleId){
         try{
             articleService.updateHits(articleId);
@@ -118,16 +122,18 @@ public class LectureController {
 
 
     //admin/lectures
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> createLecture(@Valid @RequestBody LectureCreateRequestDTO lec) {
         return new ResponseEntity<>(lecturedtoMapper.toLectureResponseDTO(lectureservice.createLecture(lec)),HttpStatus.CREATED);
     }
-    @PutMapping("/{lectureId}")
+    @PutMapping(value = "/{lectureId}",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateLecture(@PathVariable Long lectureId, @RequestBody LectureCreateRequestDTO updateDTO) {
         return new ResponseEntity<>(lecturedtoMapper.toLectureResponseDTO(lectureservice.updateLecture(lectureId, updateDTO)),HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{lectureId}")
+    @DeleteMapping(value="/{lectureId}",
+                   produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteLecture(@PathVariable Long lectureId) {
         return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.deleteLecture(lectureId)));
     }

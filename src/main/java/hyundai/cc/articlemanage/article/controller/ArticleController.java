@@ -8,6 +8,7 @@ import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.filemanage.file.controller.FileController;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,9 @@ public class ArticleController {
         try{
             // article db 업로드
             articleService.createArticle(articleCreateRequestDTO);
+            log.info("생성된 article Id: " + articleCreateRequestDTO.getArticleId());
             // 파일 첨부 시 파일 업로드
-            return new ResponseEntity<>("create article" + articleCreateRequestDTO.getTitle().toString(), HttpStatus.OK);
+            return new ResponseEntity<>(articleCreateRequestDTO, HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("insert Error", HttpStatus.BAD_REQUEST);
@@ -50,7 +52,8 @@ public class ArticleController {
     }
 
     // (조회) 확인용: 모든 article 가져오기
-    @GetMapping("/all")
+    @GetMapping(value = "/all",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getAllArticle() throws Exception {
         try{
             List<ArticleDTO> articleList = articleService.getAllArticleList();
@@ -63,7 +66,7 @@ public class ArticleController {
     }
 
     // (조회) lecture 별 article 가져오기 -> pagination 전
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getArticleListByLecture(@RequestParam long lecId,
                                                      @RequestParam(required = false) Integer cursor,
                                                      @RequestParam(defaultValue="10") Integer amount) throws Exception {
@@ -94,7 +97,9 @@ public class ArticleController {
     }
 
     // (조회) article detail 가져오기
-    @GetMapping("/{articleId}")
+    @GetMapping(value = "/{articleId}",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
     public ResponseEntity<?> getArticleDetail(@PathVariable long articleId){
         try{
             articleService.updateHits(articleId);
@@ -109,20 +114,20 @@ public class ArticleController {
     }
 
     // 수정
-    @PutMapping
+    @PutMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateArticle(@RequestBody ArticleCreateRequestDTO articleCreateRequestDTO){
         try{
             // article db 업로드
             articleService.updateArticle(articleCreateRequestDTO);
             // 파일 첨부 시 파일 업로드
-            return new ResponseEntity<>("update article" + articleCreateRequestDTO.getTitle().toString(), HttpStatus.OK);
+            return new ResponseEntity<>(articleService.getArticleDetail(articleCreateRequestDTO.getArticleId()), HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("update Error", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteArticle(@RequestParam long articleId, @RequestParam String writerId){
         try{
             // article db 업로드

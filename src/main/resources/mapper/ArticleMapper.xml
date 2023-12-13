@@ -79,7 +79,7 @@
         update ARTICLE set VIEWS = VIEWS + 1 where ARTICLEID=#{articleId}
     </update>
 
-    <insert id="createArticle" parameterType="hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO">
+    <insert id="createArticle" parameterType="hyundai.cc.articlemanage.article.dto.ArticleCreateRequestDTO" useGeneratedKeys="true" keyColumn="articleId">
         insert into ARTICLE
         (ARTICLEID, TITLE, CONTENT, WRITERID, LECTUREID)
         values (articleID_seq.nextval, #{title}, #{content}, #{writerId}, #{lectureId})

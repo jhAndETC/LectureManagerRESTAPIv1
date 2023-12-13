@@ -28,4 +28,5 @@ public class LectureDTO {
     private double price;
     private String description;
     private Long categoryId;
+    private String categoryName;
 }

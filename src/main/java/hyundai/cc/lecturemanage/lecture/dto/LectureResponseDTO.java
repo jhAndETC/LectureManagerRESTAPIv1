@@ -28,5 +28,6 @@ public class LectureResponseDTO {
     private int lectureCount;
     private double price;
     private String lectureDescription;
+    private String categoryName;
     //사용자에게 보여지는 정보
 }

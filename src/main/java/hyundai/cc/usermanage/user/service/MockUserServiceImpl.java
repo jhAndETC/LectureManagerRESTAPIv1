@@ -41,6 +41,7 @@ public class MockUserServiceImpl implements UserService{
                 throw new RuntimeException("Unique constraint violation: " + ex.getMessage());
             }
         }
+        usermapper.createRole(userCreateDTO.getId());
         return getUserDetail(userCreateDTO.getId());
     }
 
@@ -49,6 +50,11 @@ public class MockUserServiceImpl implements UserService{
     public List<UserDTO> getUserList() {
         log.info("get all users....");
         return usermapper.getUserList();
+    }
+
+    @Override
+    public String getUuidByEmail(String email) {
+        return usermapper.selectUuidByEmail(email);
     }
 
     @Override

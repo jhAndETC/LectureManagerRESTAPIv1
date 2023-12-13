@@ -5,6 +5,8 @@ import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.mapper.ArticleMapper;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.domain.ArticleCriteria;
+import hyundai.cc.usermanage.user.dto.UserDTO;
+import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,25 @@ import java.util.Map;
 @Service
 public class ArticleServiceImpl implements ArticleService{
     private final ArticleMapper articleMapper;
-    private final ArticleDTOMapper dtoMapper;
+    private final UserService userservice;
 
-    public ArticleServiceImpl(ArticleMapper articleMapper, ArticleDTOMapper dtoMapper) {
+    public ArticleServiceImpl(ArticleMapper articleMapper, UserService userservice) {
         this.articleMapper = articleMapper;
-        this.dtoMapper=dtoMapper;
+        this.userservice=userservice;
     }
 
     @Override
     public List<ArticleDTO> getAllArticleList() throws Exception {
         try {
-            log.info(articleMapper.getAllArticleList().toString());
-            return articleMapper.getAllArticleList();
+            List<ArticleDTO> list = articleMapper.getAllArticleList();
+
+            for (ArticleDTO articleDTO:list){
+                String writerId = articleDTO.getWriterId();
+                UserDTO userDTO = userservice.getUserDetail(writerId);
+                articleDTO.setUserDTO(userDTO);
+            }
+
+            return list;
         } catch (Exception e) {
             log.info(e.getMessage());
             throw e;
@@ -42,9 +51,19 @@ public class ArticleServiceImpl implements ArticleService{
             List<ArticleDTO> articleDTOList;
             if (articleCriteria.getCursor() == null){
                 articleDTOList = articleMapper.getArticleListByLectureWithPaginationFirst(articleCriteria);
+                for (ArticleDTO articleDTO:articleDTOList){
+                    String writerId = articleDTO.getWriterId();
+                    UserDTO userDTO = userservice.getUserDetail(writerId);
+                    articleDTO.setUserDTO(userDTO);
+                }
                 log.info("getArticleListByLectureWithPaginationFirst 호출: " + articleDTOList.toString());
             } else {
                 articleDTOList = articleMapper.getArticleListByLectureWithPagination(articleCriteria);
+                for (ArticleDTO articleDTO:articleDTOList){
+                    String writerId = articleDTO.getWriterId();
+                    UserDTO userDTO = userservice.getUserDetail(writerId);
+                    articleDTO.setUserDTO(userDTO);
+                }
                 log.info("getArticleListByLectureWithPagination 호출: " + articleDTOList.toString());
             }
             try {
@@ -71,7 +90,11 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public ArticleDTO getArticleDetail(long articleId) throws Exception {
         try{
-            return articleMapper.getArticleDetail(articleId);
+            ArticleDTO articleDTO = articleMapper.getArticleDetail(articleId);
+            String writerId = articleDTO.getWriterId();
+            UserDTO userDTO = userservice.getUserDetail(writerId);
+            articleDTO.setUserDTO(userDTO);
+            return articleDTO;
         } catch (Exception e) {
             log.info(e.getMessage());
             throw e;

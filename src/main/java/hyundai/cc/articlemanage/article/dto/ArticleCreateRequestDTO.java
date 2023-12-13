@@ -1,5 +1,6 @@
 package hyundai.cc.articlemanage.article.dto;
 
+import hyundai.cc.usermanage.user.dto.UserDTO;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;

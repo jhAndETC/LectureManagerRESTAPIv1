@@ -20,7 +20,7 @@
 
     <security:http auto-config="false">
         <security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
-        <security:intercept-url pattern="/users/**" access="hasRole('USER')"/>
+<!--        <security:intercept-url pattern="/users/**" access="hasRole('USER')"/>-->
         <security:intercept-url pattern="/**" access="permitAll"/>
         <security:http-basic/>
         <security:form-login

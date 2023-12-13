@@ -3,6 +3,8 @@ package hyundai.cc.lecturemanage.lecture.controller;
 
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.articlemanage.article.service.ArticleService;
+import hyundai.cc.articlemanage.reply.dto.ReplyCreateDTO;
+import hyundai.cc.articlemanage.reply.service.ReplyService;
 import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.domain.Criteria;
 import hyundai.cc.domain.PageDTO;
@@ -11,13 +13,16 @@ import hyundai.cc.lecturemanage.lecture.dto.LectureDTOMapper;
 import hyundai.cc.lecturemanage.lecture.service.LectureService;
 import hyundai.cc.lecturemanage.lecture.service.MockLectureServiceImpl;
 import hyundai.cc.lecturemanage.lecturer.dto.LecturerDTOMapper;
+import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -27,11 +32,15 @@ import java.util.stream.Collectors;
 public class LectureController {
     private final ArticleService articleService;
     private final LectureService lectureservice;
+    private final UserService userservice;
+    private final ReplyService replyservice;
     private final LectureDTOMapper lecturedtoMapper;
     private final LecturerDTOMapper lecturerDTOMapper;
-    public LectureController(ArticleService articleService, MockLectureServiceImpl lectureservice, LectureDTOMapper lecturedtoMapper, LecturerDTOMapper lecturerDTOMapper) {
+    public LectureController(ArticleService articleService, MockLectureServiceImpl lectureservice, UserService userservice, ReplyService replyservice, LectureDTOMapper lecturedtoMapper, LecturerDTOMapper lecturerDTOMapper) {
         this.articleService = articleService;
         this.lectureservice = lectureservice;
+        this.userservice = userservice;
+        this.replyservice = replyservice;
         this.lecturedtoMapper = lecturedtoMapper;
         this.lecturerDTOMapper = lecturerDTOMapper;
     }
@@ -109,13 +118,44 @@ public class LectureController {
             articleService.updateHits(articleId);
             ArticleDTO articleDetail = articleService.getArticleDetail(articleId);
             if(articleDetail.getLectureId()!=lecId){
-                return new ResponseEntity<>("해당 강좌의 게시글이 아닙니다." + articleId, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("해당 강좌의 게시글이 아닙니다.", HttpStatus.NOT_FOUND);
             }
             log.info(articleDetail.toString());
             return new ResponseEntity<>(articleDetail, HttpStatus.OK);
         } catch (Exception e){
             log.warning(e.getMessage());
             return new ResponseEntity<>("can't find article detail" + articleId, HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/{lecId}/community/{articleId}/comments")
+    public ResponseEntity<?> getReply(@PathVariable long articleId){
+        return new ResponseEntity<>(replyservice.getReply(articleId),HttpStatus.OK);
+//        try{
+//            return new ResponseEntity<>(replyservice.getReply(articleId),HttpStatus.OK);
+//        }catch (Exception ex){
+//            return ResponseEntity.badRequest().build();
+//        }
+    }
+    @GetMapping("/{lecId}/community/{articleId}/comments/{parentId}")
+    public ResponseEntity<?> getReReply(@PathVariable Long parentId){
+        try{
+            return new ResponseEntity<>(replyservice.getReReply(parentId),HttpStatus.OK);
+        }catch (Exception ex){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/{lecId}/community/{articleId}/comments/{parentId}")
+    public ResponseEntity<?> createReReply(@PathVariable long articleId, Principal principal, @PathVariable long parentId,@RequestBody ReplyCreateDTO content){
+        String currentEmail=principal.getName();
+        String userId = userservice.getUuidByEmail(currentEmail);
+        try{
+            replyservice.createReReply(articleId,userId,parentId,content);
+            return ResponseEntity.ok().build();
+        }catch (Exception ex){
+            return ResponseEntity.badRequest().build();
         }
     }
 

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hyundai.cc.articlemanage.reply.mapper.ReplyMapper">
+<insert id="createReply" >
+    <![CDATA[
+            INSERT INTO REPLY (
+                REPLYID,
+                REPLY,
+                REPLYERID,
+                ARTICLEID,
+                PARENTID
+            )
+            VALUES (
+                seq_reply.nextval,
+                #{content.reply, jdbcType=VARCHAR},
+                #{userId, jdbcType=VARCHAR},
+                #{articleId, jdbcType=NUMERIC},
+                SEQ_REPLY.currval
+            )
+        ]]>
+</insert>
+    <insert id="createReReply" >
+    <![CDATA[
+        INSERT INTO REPLY (
+            REPLYID,
+            REPLY,
+            REPLYERID,
+            ARTICLEID,
+            PARENTID
+        )
+        VALUES (
+                   seq_reply.nextval,
+                   #{content.reply,jdbcType=VARCHAR},
+                   #{userId,jdbcType=VARCHAR},
+                   #{articleId, jdbcType=NUMERIC},
+                   #{parentId,jdbcType=NUMERIC}
+               )
+        ]]>
+</insert>
+    <select id="getReply" resultType="hyundai.cc.articlemanage.reply.dto.ReplyDTO">
+                SELECT
+                    R.REPLYID as id,
+                    R.ARTICLEID,
+                    R.PARENTID,
+                    R.REPLY,
+                    R.REPLYERID,
+                    u.NICKNAME as replyerNickname,
+                    R.REPLYDATE,
+                    R.UPDATEREPLYDATE,
+                    U.NICKNAME AS replyNickname
+                FROM
+                    REPLY R
+                        JOIN USER_INFO U ON R.REPLYERID = U.ID
+                WHERE
+                    R.ARTICLEID = #{articleId}
+    </select>
+    <select id="getReReply" resultType="hyundai.cc.articlemanage.reply.dto.ReplyDTO">
+        SELECT
+            R.REPLYID as id,
+            R.ARTICLEID,
+            R.PARENTID,
+            R.REPLY,
+            R.REPLYERID,
+            u.NICKNAME as replyerNickname,
+            R.REPLYDATE,
+            R.UPDATEREPLYDATE,
+            U.NICKNAME AS replyNickname
+        FROM
+            REPLY R
+                JOIN USER_INFO U ON R.REPLYERID = U.ID
+        WHERE
+            R.PARENTID=#{parentId} and r.REPLYID!=#{parentId}
+    </select>
+
+</mapper>

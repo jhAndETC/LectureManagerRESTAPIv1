@@ -4,6 +4,8 @@ import hyundai.cc.articlemanage.article.service.ArticleService;
 import hyundai.cc.domain.Criteria;
 import hyundai.cc.domain.PageDTO;
 import hyundai.cc.domain.PostCriteria;
+import hyundai.cc.exception.PageNotFoundException;
+import hyundai.cc.exception.UserNotFoundException;
 import hyundai.cc.lecturemanage.lecture.dto.LectureDTOMapper;
 import hyundai.cc.usermanage.user.dto.UserDTOMapper;
 import hyundai.cc.usermanage.user.dto.UserResponseDTO;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 @Log
 @RestController
 @RequestMapping(value = "account",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-@PreAuthorize("hasRole('ROLE_USER')")
+@PreAuthorize("isAuthenticated()")
 public class AccountController {
     private final UserService userservice;
     private final UserDTOMapper userdtoMapper;
@@ -44,73 +46,89 @@ public class AccountController {
 
     @GetMapping
     public ResponseEntity<UserResponseDTO> getUserDetail(Principal principal) {
-        String currentEmail = principal.getName();
-        String userId = userservice.getUuidByEmail(currentEmail);
-        return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.getUserDetail(userId)));
+        try{
+            String currentEmail = principal.getName();
+            String userId = userservice.getUuidByEmail(currentEmail);
+            return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.getUserDetail(userId)));
+        } catch (Exception e){
+            throw new UserNotFoundException("존재하지 않는 회원입니다");
+        }
     }
 
 
     @GetMapping(value="/lectures/progress")
-    public ResponseEntity<?> findProgressCourses(Principal principal, Criteria cri){
-        String currentEmail = principal.getName();
-        String userId = userservice.getUuidByEmail(currentEmail);
-        int total = userservice.getProgressCount(userId,cri);
-        PageDTO page=new PageDTO(cri, total);
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("next",page.isNext());
-        map.put("prev",page.isPrev());
-        map.put("totalPages",page.getEndPage());
-        map.put("currentPage",cri.getPageNum());
-        map.put("itemsPerPage",cri.getAmount());
-        map.put("totalItems",total);
-        map.put("data",userservice.findProgressCourses(userId,cri).stream()
-                .map(lecturedtoMapper::toLectureResponseDTO)
-                .collect(Collectors.toList()));
-        return new ResponseEntity<>(map, HttpStatus.OK);
+    public ResponseEntity<?> findProgressCourses(Principal principal, Criteria cri) throws PageNotFoundException {
+        try{
+            String currentEmail = principal.getName();
+            String userId = userservice.getUuidByEmail(currentEmail);
+            int total = userservice.getProgressCount(userId,cri);
+            PageDTO page=new PageDTO(cri, total);
+            HashMap<String,Object> map=new HashMap<>();
+            map.put("next",page.isNext());
+            map.put("prev",page.isPrev());
+            map.put("totalPages",page.getEndPage());
+            map.put("currentPage",cri.getPageNum());
+            map.put("itemsPerPage",cri.getAmount());
+            map.put("totalItems",total);
+            map.put("data",userservice.findProgressCourses(userId,cri).stream()
+                    .map(lecturedtoMapper::toLectureResponseDTO)
+                    .collect(Collectors.toList()));
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e){
+            throw new PageNotFoundException("해당 정보를 조회할 수 없습니다");
+        }
+
     }
 
 
     @GetMapping("/lectures/finish")
-    public ResponseEntity<?> findFinishCourses(Principal principal,Criteria cri){
-        String currentEmail = principal.getName();
-        String userId = userservice.getUuidByEmail(currentEmail);
-        int total = userservice.getFinishCount(userId,cri);
-        PageDTO page=new PageDTO(cri, total);
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("data",userservice.findFinishCourses(userId,cri).stream()
-                .map(lecturedtoMapper::toLectureResponseDTO)
-                .collect(Collectors.toList()));
-        map.put("next",page.isNext());
-        map.put("prev",page.isPrev());
-        //map.put("startpage",page.getStartPage());
-        map.put("totalPages",page.getEndPage());
-        map.put("currentPage",cri.getPageNum());
-        map.put("itemsPerPage",cri.getAmount());
-        map.put("totalItems",total);
+    public ResponseEntity<?> findFinishCourses(Principal principal,Criteria cri) throws PageNotFoundException {
+        try{
+            String currentEmail = principal.getName();
+            String userId = userservice.getUuidByEmail(currentEmail);
+            int total = userservice.getFinishCount(userId,cri);
+            PageDTO page=new PageDTO(cri, total);
+            HashMap<String,Object> map=new HashMap<>();
+            map.put("data",userservice.findFinishCourses(userId,cri).stream()
+                    .map(lecturedtoMapper::toLectureResponseDTO)
+                    .collect(Collectors.toList()));
+            map.put("next",page.isNext());
+            map.put("prev",page.isPrev());
+            map.put("totalPages",page.getEndPage());
+            map.put("currentPage",cri.getPageNum());
+            map.put("itemsPerPage",cri.getAmount());
+            map.put("totalItems",total);
 
-        return new ResponseEntity<>(map,HttpStatus.OK);
+            return new ResponseEntity<>(map,HttpStatus.OK);
+        } catch (Exception e){
+            throw new PageNotFoundException("해당 정보를 조회할 수 없습니다");
+        }
+
     }
     @GetMapping("/lectures/keep")
-    public ResponseEntity<?> findLikedCourses(Principal principal,Criteria cri){
-        String currentEmail = principal.getName();
-        String userId = userservice.getUuidByEmail(currentEmail);
-        int total = userservice.getLikedCount(userId,cri);
-        PageDTO page=new PageDTO(cri, total);
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("next",page.isNext());
-        map.put("prev",page.isPrev());
-        map.put("totalPages",page.getEndPage());
-        map.put("currentPage",cri.getPageNum());
-        map.put("itemsPerPage",cri.getAmount());
-        map.put("totalItems",total);
-        map.put("data",userservice.findLikedCourses(userId,cri).stream()
-                .map(lecturedtoMapper::toLectureResponseDTO)
-                .collect(Collectors.toList()));
-        return new ResponseEntity<>(map,HttpStatus.OK);
+    public ResponseEntity<?> findLikedCourses(Principal principal,Criteria cri) throws PageNotFoundException {
+        try{
+            String currentEmail = principal.getName();
+            String userId = userservice.getUuidByEmail(currentEmail);
+            int total = userservice.getLikedCount(userId,cri);
+            PageDTO page=new PageDTO(cri, total);
+            HashMap<String,Object> map=new HashMap<>();
+            map.put("next",page.isNext());
+            map.put("prev",page.isPrev());
+            map.put("totalPages",page.getEndPage());
+            map.put("currentPage",cri.getPageNum());
+            map.put("itemsPerPage",cri.getAmount());
+            map.put("totalItems",total);
+            map.put("data",userservice.findLikedCourses(userId,cri).stream()
+                    .map(lecturedtoMapper::toLectureResponseDTO)
+                    .collect(Collectors.toList()));
+            return new ResponseEntity<>(map,HttpStatus.OK);
+        } catch (Exception e){
+            throw new PageNotFoundException("해당 정보를 조회할 수 없습니다");
+        }
     }
 
     @GetMapping("/community/posts")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getArticleListById(Principal principal,@RequestParam(required = false) Integer cursor,
                                                 @RequestParam(defaultValue="10") Integer amount) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
@@ -133,7 +151,7 @@ public class AccountController {
             map.replace("currentCursor", cursor);
             map.replace("next", articleListById.get("next"));
         } catch (Exception e){
-            log.info(e.getMessage());
+            throw new PageNotFoundException("해당 정보를 조회할 수 없습니다");
         }
         return new ResponseEntity<>(map, HttpStatus.OK);
 

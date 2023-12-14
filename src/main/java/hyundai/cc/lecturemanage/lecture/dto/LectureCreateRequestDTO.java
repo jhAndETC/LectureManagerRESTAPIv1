@@ -2,6 +2,7 @@ package hyundai.cc.lecturemanage.lecture.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -26,9 +27,11 @@ public class LectureCreateRequestDTO {
     private String location;
 
     @NotNull(message = "강의 시작 날짜를 입력해주세요")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
     @NotNull(message = "강의 종료 날짜를 입력해주세요")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     @Min(value = 1, message = "강의 횟수는 1회 이상이어야 합니다")

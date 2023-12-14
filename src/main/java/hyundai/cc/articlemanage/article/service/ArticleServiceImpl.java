@@ -100,7 +100,7 @@ public class ArticleServiceImpl implements ArticleService{
                     UserDTO userDTO = userservice.getUserDetail(writerId);
                     articleDTO.setUserDTO(userDTO);
                 }
-                log.info("getArticleListByLectureWithPaginationFirst 호출: " + articleDTOList.toString());
+                log.info("getArticleListByIdFirst 호출: " + articleDTOList.toString());
             } else {
                 articleDTOList = articleMapper.getArticleListById(postCriteria);
                 for (ArticleDTO articleDTO:articleDTOList){
@@ -108,7 +108,7 @@ public class ArticleServiceImpl implements ArticleService{
                     UserDTO userDTO = userservice.getUserDetail(writerId);
                     articleDTO.setUserDTO(userDTO);
                 }
-                log.info("getArticleListByLectureWithPagination 호출: " + articleDTOList.toString());
+                log.info("getArticleListById 호출: " + articleDTOList.toString());
             }
             try {
                 // List의 마지막 요소를 가져오기

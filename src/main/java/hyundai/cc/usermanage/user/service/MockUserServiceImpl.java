@@ -61,20 +61,19 @@ public class MockUserServiceImpl implements UserService{
     public UserDTO getUserDetail(String userid) {
         UserDTO user=usermapper.getUserDetail(userid);
         if (user == null) {
-            throw new UserNotFoundException("User not found with ID: " + userid);
+            throw new UserNotFoundException("존재하지 않는 회원입니다");
         }
         return user;
     }
 
     @Override
     public UserDTO updateUser(String userId,UserUpdateRequestDTO user) {
-        log.info("update user...." );
         UserDTO userDTO=getUserDetail(userId);
         UserCreateDTO updateUser=userdtoMapper.FromUpdatetoUserCreateDTO(userDTO,user);
         try{
             usermapper.updateUser(userId,updateUser);
         } catch (DataAccessException ex){
-            throw new UserCreationException("Cannot update user");
+            throw new UserCreationException("회원 정보를 업데이트할 수 없습니다.");
         }
         return getUserDetail(userId);
     }
@@ -110,19 +109,16 @@ public class MockUserServiceImpl implements UserService{
 
     @Override
     public List<LectureDTO> findProgressCourses(String userId,Criteria cri) {
-        log.info("get user progress course....");
         return usermapper.findProgressCourses(userId,cri);
     }
 
     @Override
     public List<LectureDTO> findFinishCourses(String userId,Criteria cri) {
-        log.info("get user progress course....");
         return usermapper.findFinishCourses(userId,cri);
     }
 
     @Override
     public List<LectureDTO> findLikedCourses(String userId,Criteria cri) {
-        log.info("get user like course....");
         return usermapper.findLikedCourses(userId,cri);
     }
 

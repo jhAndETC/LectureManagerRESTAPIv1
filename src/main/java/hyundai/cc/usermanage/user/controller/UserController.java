@@ -8,6 +8,7 @@ import hyundai.cc.domain.Criteria;
 import hyundai.cc.domain.PageDTO;
 
 import hyundai.cc.domain.PostCriteria;
+import hyundai.cc.exception.UserNotFoundException;
 import hyundai.cc.lecturemanage.lecture.dto.LectureDTOMapper;
 import hyundai.cc.usermanage.user.dto.*;
 import hyundai.cc.usermanage.user.service.MockUserServiceImpl;
@@ -63,6 +64,15 @@ public class UserController {
                         .map(userdtoMapper::toUserResponseDTO)
                         .collect(Collectors.toList()));
         return new ResponseEntity<>(map,HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDTO> getUserDetail(@PathVariable String userId) {
+        try{
+            return ResponseEntity.ok(userdtoMapper.toUserResponseDTO(userservice.getUserDetail(userId)));
+        } catch (Exception e){
+            throw new UserNotFoundException("존재하지 않는 회원입니다");
+        }
     }
 
 

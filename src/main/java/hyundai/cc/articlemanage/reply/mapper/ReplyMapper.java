@@ -18,5 +18,7 @@ public interface ReplyMapper {
     public int getReReplyTotal(@Param("parentId") long parentId) throws Exception;
     public List<ReplyDTO> getReplyListByArticleWithPagination(@Param("replyCriteria") ArticleCriteria replyCriteria) throws SQLException;
     public List<ReplyDTO> getReplyListByArticleWithPaginationFirst(@Param("replyCriteria") ArticleCriteria replyCriteria) throws SQLException;
+    public List<ReplyDTO> getReReplyListByArticleWithPagination(@Param("replyCriteria") ArticleCriteria replyCriteria) throws SQLException;
+    public List<ReplyDTO> getReReplyListByArticleWithPaginationFirst(@Param("replyCriteria") ArticleCriteria replyCriteria) throws SQLException;
 
 }

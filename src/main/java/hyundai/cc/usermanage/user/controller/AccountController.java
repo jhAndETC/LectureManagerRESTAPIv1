@@ -44,7 +44,7 @@ public class AccountController {
     }
 
 
-    @GetMapping("/lectures/progress")
+    @GetMapping(value="/lectures/progress")
     public ResponseEntity<?> findProgressCourses(Principal principal, Criteria cri){
         String currentEmail = principal.getName();
         String userId = userservice.getUuidByEmail(currentEmail);

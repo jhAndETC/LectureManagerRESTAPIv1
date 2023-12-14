@@ -19,9 +19,9 @@ public class ReplyDTO {
     private String reply;
     private String replyerId;
     private String replyerNickname;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime replyDate;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updatereplydate;
 
     //DB 접근

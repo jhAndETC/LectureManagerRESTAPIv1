@@ -10,6 +10,7 @@ import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Log
 @RestController
-@RequestMapping("account")
+@RequestMapping(value = "account",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @PreAuthorize("hasRole('ROLE_USER')")
 public class AccountController {
     private final UserService userservice;

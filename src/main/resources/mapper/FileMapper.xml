@@ -5,10 +5,26 @@
 
 <mapper namespace="hyundai.cc.filemanage.mapper.FileMapper">
 
-    <insert id="uploadFileToDB" parameterType="hyundai.cc.filemanage.file.dto.AttachFileDTO">
-        insert into FILE_INFO
-            (ATTACH_TYPE, BYTE_SIZE, NAME, URL)
-        values (file_info_seq.nextval, #{attachType}, #{byteSize}, #{fileName}, #{uploadPath})
+    <insert id="uploadFileToDB">
+        insert into
+        <choose>
+            <when test="type=='profiles'">
+                PROFILE_FILE
+            </when>
+        </choose>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type=='profiles'">
+                USER_ID,
+            </if>
+            FILE_NAME
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type=='profiles'">
+                #{id},
+            </if>
+            #{file.fileName}
+        </trim>
     </insert>
+
 
 </mapper>

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Log
 @RestController
-@RequestMapping("lectures")
+@RequestMapping(value = "lectures",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class LectureController {
     private final ArticleService articleService;
     private final LectureService lectureservice;
@@ -49,7 +49,7 @@ public class LectureController {
 
 
     //lecture 강의 목록
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping
     public ResponseEntity<?> getLecturesByPage(Criteria cri) {
         int total = lectureservice.getTotal(cri);
         PageDTO page=new PageDTO(cri, total);
@@ -69,8 +69,7 @@ public class LectureController {
 
 
     //lectures/3 강의 소개
-    @GetMapping(value = "/{lectureId}",
-                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping("/{lectureId}")
     public ResponseEntity<?> getLectureDetail(@PathVariable Long lectureId) {
         return ResponseEntity.ok(lecturedtoMapper.toLectureResponseDTO(lectureservice.getLectureDetail(lectureId)));
     }
@@ -82,8 +81,7 @@ public class LectureController {
     }
 
 
-    @GetMapping(value = "/{lecId}/community",
-                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping( "/{lecId}/community")
     public ResponseEntity<?> getArticleListByLecture(@PathVariable Long lecId,@RequestParam(required = false) Integer cursor,
                                                      @RequestParam(defaultValue="10") Integer amount) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
@@ -111,8 +109,7 @@ public class LectureController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{lecId}/community/{articleId}",
-                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping( "/{lecId}/community/{articleId}")
     public ResponseEntity<?> getArticleDetail(@PathVariable long lecId, @PathVariable long articleId){
         try{
             articleService.updateHits(articleId);

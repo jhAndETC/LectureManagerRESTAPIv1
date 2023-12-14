@@ -81,7 +81,7 @@ public class FileServiceImpl implements FileService {
                 // add to List
                 list.add(attachFileDTO);
                 try{
-                    fileMapper.uploadFileToDB(attachFileDTO);
+                    fileMapper.uploadFileToDB(type,id,attachFileDTO);
                 } catch (Exception e){
                     log.info(e.getMessage());
                 }
@@ -107,14 +107,6 @@ public class FileServiceImpl implements FileService {
         return result;
     }
 
-    @Override
-    public void uploadFileToDB(AttachFileDTO attachFileDTO) throws Exception {
-        try{
-            fileMapper.uploadFileToDB(attachFileDTO);
-        } catch (Exception e){
-            log.info(e.getMessage());
-        }
-    }
 
 
 }

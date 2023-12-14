@@ -5,13 +5,13 @@ import lombok.Data;
 
 @Data
 public class ArticleCriteria {
-    private Long lectureId;
+    private Long Id;
     private Integer cursor;
     private Integer amount;
 
     @Builder
-    public ArticleCriteria(Long lectureId, Integer cursor, Integer amount){
-        this.lectureId = lectureId;
+    public ArticleCriteria(Long Id, Integer cursor, Integer amount){
+        this.Id = Id;
         this.cursor = cursor;
         this.amount = amount;
     }

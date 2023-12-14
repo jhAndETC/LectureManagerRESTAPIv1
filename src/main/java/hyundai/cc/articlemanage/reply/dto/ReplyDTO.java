@@ -1,6 +1,7 @@
 package hyundai.cc.articlemanage.reply.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import hyundai.cc.usermanage.user.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,9 @@ public class ReplyDTO {
     private Long parentId;
     private String reply;
     private String replyerId;
-    private String replyerNickname;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+//    private String replyerNickname;
+    private UserDTO userDTO;
     private LocalDateTime replyDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updatereplydate;
 
     //DB 접근

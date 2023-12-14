@@ -18,6 +18,8 @@ public class AppConfig {
         source.registerCorsConfiguration("localhost:8080", config);
         source.registerCorsConfiguration("api.chasango.com", config);
         source.registerCorsConfiguration("web.chasango.com", config);
+        source.registerCorsConfiguration("chasango.com:3000", config);
+        source.registerCorsConfiguration("chasango.com:8080", config);
         return new CorsFilter(source);
     }
 }

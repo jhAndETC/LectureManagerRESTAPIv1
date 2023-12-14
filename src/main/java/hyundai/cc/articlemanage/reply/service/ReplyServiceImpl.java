@@ -5,6 +5,8 @@ import hyundai.cc.articlemanage.reply.dto.ReplyDTO;
 import hyundai.cc.articlemanage.reply.mapper.ReplyMapper;
 import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.usermanage.user.dto.UserDTO;
+import hyundai.cc.usermanage.user.dto.UserDTOMapper;
+import hyundai.cc.usermanage.user.dto.UserResponseDTO;
 import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ import java.util.List;
 public class ReplyServiceImpl implements ReplyService{
     private final ReplyMapper replyMapper;
     private final UserService userservice;
+    private final UserDTOMapper userDTOMapper;
 
-    public ReplyServiceImpl(ReplyMapper replyMapper, UserService userservice) {
+    public ReplyServiceImpl(ReplyMapper replyMapper, UserService userservice, UserDTOMapper userDTOMapper) {
         this.replyMapper = replyMapper;
         this.userservice=userservice;
+        this.userDTOMapper = userDTOMapper;
     }
 
     @Override
@@ -74,17 +78,21 @@ public class ReplyServiceImpl implements ReplyService{
             if (replyCriteria.getCursor() == null) {
                 replyDTOList = replyMapper.getReplyListByArticleWithPaginationFirst(replyCriteria);
                 for (ReplyDTO replyDTO : replyDTOList) {
+                    long totalrecomments=replyMapper.getReReplyTotal(replyDTO.getId())-1;
                     String replyerId = replyDTO.getReplyerId();
-                    UserDTO userDTO = userservice.getUserDetail(replyerId);
-                    replyDTO.setUserDTO(userDTO);
+                    UserResponseDTO user = userDTOMapper.toUserResponseDTO(userservice.getUserDetail(replyerId));
+                    replyDTO.setUserResponseDTO(user);
+                    replyDTO.setTotalRecomments(totalrecomments);
                 }
                 log.info("getReplyListByArticleWithPaginationFirst 호출: " + replyDTOList.toString());
             } else {
                 replyDTOList = replyMapper.getReplyListByArticleWithPagination(replyCriteria);
                 for (ReplyDTO replyDTO : replyDTOList) {
+                    long totalrecomments=replyMapper.getReReplyTotal(replyDTO.getId()-1);
                     String replyerId = replyDTO.getReplyerId();
-                    UserDTO userDTO = userservice.getUserDetail(replyerId);
-                    replyDTO.setUserDTO(userDTO);
+                    UserResponseDTO user = userDTOMapper.toUserResponseDTO(userservice.getUserDetail(replyerId));
+                    replyDTO.setUserResponseDTO(user);
+                    replyDTO.setTotalRecomments(totalrecomments);
                 }
                 log.info("getReplyListByArticleWithPagination 호출: " + replyDTOList.toString());
             }
@@ -118,16 +126,16 @@ public class ReplyServiceImpl implements ReplyService{
                 rereplyDTOList = replyMapper.getReReplyListByArticleWithPaginationFirst(replyCriteria);
                 for (ReplyDTO rereplyDTO : rereplyDTOList) {
                     String replyerId = rereplyDTO.getReplyerId();
-                    UserDTO userDTO = userservice.getUserDetail(replyerId);
-                    rereplyDTO.setUserDTO(userDTO);
+                    UserResponseDTO user = userDTOMapper.toUserResponseDTO(userservice.getUserDetail(replyerId));
+                    rereplyDTO.setUserResponseDTO(user);
                 }
                 log.info("getReplyListByArticleWithPaginationFirst 호출: " + rereplyDTOList.toString());
             } else {
                 rereplyDTOList = replyMapper.getReReplyListByArticleWithPagination(replyCriteria);
-                for (ReplyDTO replyDTO : rereplyDTOList) {
-                    String replyerId = replyDTO.getReplyerId();
-                    UserDTO userDTO = userservice.getUserDetail(replyerId);
-                    replyDTO.setUserDTO(userDTO);
+                for (ReplyDTO rereplyDTO : rereplyDTOList) {
+                    String replyerId = rereplyDTO.getReplyerId();
+                    UserResponseDTO user = userDTOMapper.toUserResponseDTO(userservice.getUserDetail(replyerId));
+                    rereplyDTO.setUserResponseDTO(user);
                 }
                 log.info("getReplyListByArticleWithPagination 호출: " + rereplyDTOList.toString());
             }

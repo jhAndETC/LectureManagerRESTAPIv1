@@ -128,4 +128,47 @@
         ]]>
     </select>
 
+    <select id="getReReplyListByArticleWithPagination" resultType="hyundai.cc.articlemanage.reply.dto.ReplyDTO">
+        <![CDATA[
+        SELECT A.ID, A.ARTICLEID, A.PARENTID, A.REPLY, A.REPLYERID, A.REPLYDATE, A.UPDATEREPLYDATE, A.RNUM
+        FROM (SELECT
+                  REPLYID as id,
+                  ARTICLEID,
+                  PARENTID,
+                  REPLY,
+                  REPLYERID,
+                  REPLYDATE,
+                  UPDATEREPLYDATE,
+                  ROW_NUMBER() OVER (ORDER BY REPLYID DESC) AS rnum
+              FROM
+                  REPLY
+              WHERE
+                  PARENTID = #{replyCriteria.Id} AND REPLYID != PARENTID AND REPLYID < #{replyCriteria.cursor}
+              ORDER BY rnum)  A
+        WHERE A.RNUM <= #{replyCriteria.amount}
+        ORDER BY A.RNUM
+        ]]>
+    </select>
+
+    <select id="getReReplyListByArticleWithPaginationFirst" resultType="hyundai.cc.articlemanage.reply.dto.ReplyDTO">
+        <![CDATA[
+        SELECT A.ID, A.ARTICLEID, A.PARENTID, A.REPLY, A.REPLYERID, A.REPLYDATE, A.UPDATEREPLYDATE
+        FROM (SELECT
+                  REPLYID as id,
+                  ARTICLEID,
+                  PARENTID,
+                  REPLY,
+                  REPLYERID,
+                  REPLYDATE,
+                  UPDATEREPLYDATE,
+                  ROW_NUMBER() OVER (ORDER BY REPLYID DESC) AS rnum
+              FROM
+                  REPLY
+              WHERE
+                  PARENTID = #{replyCriteria.Id} AND REPLYID != PARENTID)  A
+        WHERE A.RNUM <= #{replyCriteria.amount}
+        ORDER BY A.RNUM
+        ]]>
+    </select>
+
 </mapper>

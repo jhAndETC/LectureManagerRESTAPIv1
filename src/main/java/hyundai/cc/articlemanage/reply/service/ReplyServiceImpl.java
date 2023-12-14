@@ -113,33 +113,33 @@ public class ReplyServiceImpl implements ReplyService{
     public HashMap<String, Object> getReReplyListByArticleWithPagination(ArticleCriteria replyCriteria) throws Exception {
         try {
             log.info("replyServiceImpl: " + replyCriteria.toString());
-            List<ReplyDTO> replyDTOList;
+            List<ReplyDTO> rereplyDTOList;
             if (replyCriteria.getCursor() == null) {
-                replyDTOList = replyMapper.getReplyListByArticleWithPaginationFirst(replyCriteria);
-                for (ReplyDTO replyDTO : replyDTOList) {
-                    String replyerId = replyDTO.getReplyerId();
+                rereplyDTOList = replyMapper.getReReplyListByArticleWithPaginationFirst(replyCriteria);
+                for (ReplyDTO rereplyDTO : rereplyDTOList) {
+                    String replyerId = rereplyDTO.getReplyerId();
                     UserDTO userDTO = userservice.getUserDetail(replyerId);
-                    replyDTO.setUserDTO(userDTO);
+                    rereplyDTO.setUserDTO(userDTO);
                 }
-                log.info("getReplyListByArticleWithPaginationFirst 호출: " + replyDTOList.toString());
+                log.info("getReplyListByArticleWithPaginationFirst 호출: " + rereplyDTOList.toString());
             } else {
-                replyDTOList = replyMapper.getReplyListByArticleWithPagination(replyCriteria);
-                for (ReplyDTO replyDTO : replyDTOList) {
+                rereplyDTOList = replyMapper.getReReplyListByArticleWithPagination(replyCriteria);
+                for (ReplyDTO replyDTO : rereplyDTOList) {
                     String replyerId = replyDTO.getReplyerId();
                     UserDTO userDTO = userservice.getUserDetail(replyerId);
                     replyDTO.setUserDTO(userDTO);
                 }
-                log.info("getReplyListByArticleWithPagination 호출: " + replyDTOList.toString());
+                log.info("getReplyListByArticleWithPagination 호출: " + rereplyDTOList.toString());
             }
             try {
                 // List의 마지막 요소를 가져오기
-                ReplyDTO lastReply = replyDTOList.get(replyDTOList.size() - 1);
+                ReplyDTO lastReply = rereplyDTOList.get(rereplyDTOList.size() - 1);
                 // 마지막 reply의 replyId를 가져오기
                 long lartReplyId = lastReply.getId();
                 // 출력 또는 다른 용도로 사용
                 log.info("가장 마지막 replyId: " + lartReplyId);
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("replyDTOList", replyDTOList);
+                map.put("replyDTOList", rereplyDTOList);
                 map.put("next", lartReplyId);
                 return map;
             } catch (Exception e) {

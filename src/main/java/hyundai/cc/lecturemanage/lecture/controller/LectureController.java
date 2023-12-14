@@ -4,6 +4,7 @@ package hyundai.cc.lecturemanage.lecture.controller;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.articlemanage.article.service.ArticleService;
 import hyundai.cc.articlemanage.reply.dto.ReplyCreateDTO;
+import hyundai.cc.articlemanage.reply.dto.ReplyDTO;
 import hyundai.cc.articlemanage.reply.service.ReplyService;
 import hyundai.cc.domain.ArticleCriteria;
 import hyundai.cc.domain.Criteria;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Log
@@ -89,7 +92,8 @@ public class LectureController {
         HashMap<String, Object> map = new HashMap<>();
         int total = articleService.getTotal(lecId);
         map.put("total", total);
-        map.put("data", null);
+        List<ArticleDTO> replyDTOList = new ArrayList<>();
+        map.put("data", replyDTOList);
         if (cursor != null){
             map.put("currentCursor", cursor);
         } else {
@@ -127,22 +131,66 @@ public class LectureController {
             return new ResponseEntity<>("can't find article detail" + articleId, HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/{lecId}/community/{articleId}/comments")
-    public ResponseEntity<?> getReply(@PathVariable long articleId){
 
-        try{
-            return new ResponseEntity<>(replyservice.getReply(articleId),HttpStatus.OK);
-        }catch (Exception ex){
-            return ResponseEntity.badRequest().build();
+    @GetMapping(value = "/{lecId}/community/{articleId}/comments",
+                produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> getReply(@PathVariable long articleId,
+                                      @RequestParam(required = false) Integer cursor,
+                                      @RequestParam(defaultValue = "10") Integer amount) throws Exception {
+        HashMap<String, Object> map = new HashMap<>();
+        int total = replyservice.getReplyTotal(articleId);
+        map.put("total", total);
+        List<ReplyDTO> replyDTOList = new ArrayList<>();
+        map.put("data", replyDTOList);
+        if (cursor != null){
+            map.put("currentCursor", cursor);
+        } else {
+            map.put("currentCursor", null);
         }
+        map.put("next", null);
+        map.put("amount", amount);
+        try{
+            ArticleCriteria replyCriteria = new ArticleCriteria(articleId, cursor, amount);
+            log.info("replyController, replyCritera: " + replyCriteria.toString());
+            HashMap<String, Object> replyListByArticle = replyservice.getReplyListByArticleWithPagination(replyCriteria);
+            log.info(replyListByArticle.toString());
+            map.replace("data", replyListByArticle.get("replyDTOList"));
+            map.replace("currentCursor", cursor);
+            map.replace("next", replyListByArticle.get("next"));
+        } catch (Exception ex) {
+            log.info(ex.getMessage());
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
     @GetMapping("/{lecId}/community/{articleId}/comments/{parentId}")
-    public ResponseEntity<?> getReReply(@PathVariable Long parentId){
-        try{
-            return new ResponseEntity<>(replyservice.getReReply(parentId),HttpStatus.OK);
-        }catch (Exception ex){
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> getReReply(@PathVariable Long parentId,
+                                        @RequestParam(required = false) Integer cursor,
+                                        @RequestParam(defaultValue = "10") Integer amount) throws Exception {
+        HashMap<String, Object> map = new HashMap<>();
+        int total = replyservice.getReReplyTotal(parentId);
+        map.put("total", total);
+        List<ReplyDTO> rereplyDTOList = new ArrayList<>();
+        map.put("data", rereplyDTOList);
+        if (cursor != null){
+            map.put("currentCursor", cursor);
+        } else {
+            map.put("currentCursor", null);
         }
+        map.put("next", null);
+        map.put("amount", amount);
+        try{
+            ArticleCriteria replyCriteria = new ArticleCriteria(parentId, cursor, amount);
+            log.info("replyController, replyCritera: " + replyCriteria.toString());
+            HashMap<String, Object> rereplyListByArticle = replyservice.getReReplyListByArticleWithPagination(replyCriteria);
+            log.info(rereplyListByArticle.toString());
+            map.replace("data", rereplyListByArticle.get("replyDTOList"));
+            map.replace("currentCursor", cursor);
+            map.replace("next", rereplyListByArticle.get("next"));
+        } catch (Exception ex) {
+            log.info(ex.getMessage());
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
 

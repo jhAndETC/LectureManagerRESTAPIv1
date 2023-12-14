@@ -28,7 +28,7 @@
                         WRITERID, LECTUREID,
                         ROW_NUMBER() OVER (ORDER BY ARTICLEID DESC) AS rnum
                  FROM ARTICLE
-                 WHERE LECTUREID = #{lectureId}
+                 WHERE LECTUREID = #{Id}
              ) a
                  LEFT OUTER JOIN USER_INFO u ON a.WRITERID = u.id
                  LEFT OUTER JOIN LECTURE l ON a.LECTUREID = l.LECTUREID
@@ -48,7 +48,7 @@
                         WRITERID, LECTUREID,
                         ROW_NUMBER() OVER (ORDER BY ARTICLEID DESC) AS rnum
                  FROM ARTICLE
-                 WHERE LECTUREID = #{lectureId} and ARTICLEID < #{cursor}
+                 WHERE LECTUREID = #{Id} and ARTICLEID < #{cursor}
              ) a
                  LEFT OUTER JOIN USER_INFO u ON a.WRITERID = u.id
                  LEFT OUTER JOIN LECTURE l ON a.LECTUREID = l.LECTUREID

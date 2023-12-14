@@ -75,6 +75,50 @@
         select count(ARTICLEID) from article where lectureid=#{lectureId}
     </select>
 
+    <select id="getTotalbyId" parameterType="java.lang.String" resultType="_int">
+        select count(ARTICLEID) from article where WRITERID=#{userId}
+    </select>
+
+    <select id="getArticleListByIdFirst" parameterType="hyundai.cc.domain.PostCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
+        <![CDATA[
+        SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
+               a.WRITERID,
+               a.lectureId as lectureId,
+               NVL(l.TITLE, 'lecture title null') AS lectureTitle
+        FROM (
+                 SELECT articleId, title, content, regdate, updateDate, views, is_notice,
+                        WRITERID, LECTUREID,
+                        ROW_NUMBER() OVER (ORDER BY ARTICLEID DESC) AS rnum
+                 FROM ARTICLE
+                 WHERE WRITERID = #{userId}
+             ) a
+                 LEFT OUTER JOIN USER_INFO u ON a.WRITERID = u.id
+                 LEFT OUTER JOIN LECTURE l ON a.LECTUREID = l.LECTUREID
+        WHERE a.rnum <= #{amount}
+        ORDER BY a.rnum
+        ]]>
+    </select>
+
+    <select id="getArticleListById" parameterType="hyundai.cc.domain.PostCriteria" resultType="hyundai.cc.articlemanage.article.dto.ArticleDTO">
+        <![CDATA[
+        SELECT a.articleId as Id, a.title, a.content, a.regdate, a.updateDate, a.views, a.is_notice,
+               a.WRITERID,
+               a.lectureId as lectureId,
+               NVL(l.TITLE, '') AS lectureTitle
+        FROM (
+                 SELECT articleId, title, content, regdate, updateDate, views, is_notice,
+                        WRITERID, LECTUREID,
+                        ROW_NUMBER() OVER (ORDER BY ARTICLEID DESC) AS rnum
+                 FROM ARTICLE
+                 WHERE WRITERID = #{userId} and ARTICLEID < #{cursor}
+             ) a
+                 LEFT OUTER JOIN USER_INFO u ON a.WRITERID = u.id
+                 LEFT OUTER JOIN LECTURE l ON a.LECTUREID = l.LECTUREID
+        WHERE a.rnum <= #{amount}
+        ORDER BY a.rnum
+        ]]>
+    </select>
+
     <update id="updateHits" parameterType="_long">
         update ARTICLE set VIEWS = VIEWS + 1 where ARTICLEID=#{articleId}
     </update>

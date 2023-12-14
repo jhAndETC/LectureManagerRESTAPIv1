@@ -19,6 +19,7 @@
         secured-annotations="enabled"/>
 
     <security:http auto-config="false">
+        <security:custom-filter before="FIRST" ref="corsFilter"/>
         <security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
 <!--        <security:intercept-url pattern="/users/**" access="hasRole('USER')"/>-->
         <security:intercept-url pattern="/**" access="permitAll"/>
@@ -29,13 +30,8 @@
                 password-parameter="password"
                 />
 
-<!--        <security:logout-->
-<!--                logout-url="/logout"-->
-<!--                logout-success-url="/"-->
-<!--                delete-cookies="JSESSIONID" />-->
         <security:session-management
                 session-fixation-protection="migrateSession"
-                invalid-session-url="/login"
         session-authentication-error-url="/session-expired">
         </security:session-management>
         <security:csrf disabled="true"></security:csrf>

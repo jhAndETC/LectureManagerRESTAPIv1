@@ -5,6 +5,7 @@ import hyundai.cc.articlemanage.article.dto.ArticleDTOMapper;
 import hyundai.cc.articlemanage.article.mapper.ArticleMapper;
 import hyundai.cc.articlemanage.article.dto.ArticleDTO;
 import hyundai.cc.domain.ArticleCriteria;
+import hyundai.cc.domain.PostCriteria;
 import hyundai.cc.usermanage.user.dto.UserDTO;
 import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
@@ -88,6 +89,49 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
+    public HashMap<String, Object> getArticleListById(PostCriteria postCriteria) throws Exception {
+        try{
+            log.info("articleServiceImpl: " + postCriteria.toString());
+            List<ArticleDTO> articleDTOList;
+            if (postCriteria.getCursor() == null){
+                articleDTOList = articleMapper.getArticleListByIdFirst(postCriteria);
+                for (ArticleDTO articleDTO:articleDTOList){
+                    String writerId = articleDTO.getWriterId();
+                    UserDTO userDTO = userservice.getUserDetail(writerId);
+                    articleDTO.setUserDTO(userDTO);
+                }
+                log.info("getArticleListByLectureWithPaginationFirst 호출: " + articleDTOList.toString());
+            } else {
+                articleDTOList = articleMapper.getArticleListById(postCriteria);
+                for (ArticleDTO articleDTO:articleDTOList){
+                    String writerId = articleDTO.getWriterId();
+                    UserDTO userDTO = userservice.getUserDetail(writerId);
+                    articleDTO.setUserDTO(userDTO);
+                }
+                log.info("getArticleListByLectureWithPagination 호출: " + articleDTOList.toString());
+            }
+            try {
+                // List의 마지막 요소를 가져오기
+                ArticleDTO lastArticle = articleDTOList.get(articleDTOList.size() - 1);
+                // 마지막 Article의 articleId를 가져오기
+                long lastArticleId = lastArticle.getId();
+                // 출력 또는 다른 용도로 사용
+                log.info("가장 마지막 articleId: " + lastArticleId);
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("articleDTOList", articleDTOList);
+                map.put("next", lastArticleId);
+                return map;
+            } catch (Exception e) {
+                log.info(e.getMessage());
+                throw e;
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
     public ArticleDTO getArticleDetail(long articleId) throws Exception {
         try{
             ArticleDTO articleDTO = articleMapper.getArticleDetail(articleId);
@@ -105,6 +149,16 @@ public class ArticleServiceImpl implements ArticleService{
     public int getTotal(long lectureId) throws Exception {
         try{
             return articleMapper.getTotal(lectureId);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public int getTotalbyId(String userId) throws Exception {
+        try{
+            return articleMapper.getTotalbyId(userId);
         } catch (Exception e) {
             log.info(e.getMessage());
             throw e;

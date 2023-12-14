@@ -1,7 +1,9 @@
 package hyundai.cc.usermanage.user.controller;
 
+import hyundai.cc.articlemanage.article.service.ArticleService;
 import hyundai.cc.domain.Criteria;
 import hyundai.cc.domain.PageDTO;
+import hyundai.cc.domain.PostCriteria;
 import hyundai.cc.lecturemanage.lecture.dto.LectureDTOMapper;
 import hyundai.cc.usermanage.user.dto.UserDTOMapper;
 import hyundai.cc.usermanage.user.dto.UserResponseDTO;
@@ -10,10 +12,12 @@ import hyundai.cc.usermanage.user.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -22,18 +26,20 @@ import java.util.stream.Collectors;
 
 @Log
 @RestController
-@RequestMapping("account")
+@RequestMapping(value = "account",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @PreAuthorize("hasRole('ROLE_USER')")
 public class AccountController {
     private final UserService userservice;
     private final UserDTOMapper userdtoMapper;
     private final LectureDTOMapper lecturedtoMapper;
+    private final ArticleService articleService;
 
     @Autowired
-    public AccountController(MockUserServiceImpl userservice, UserDTOMapper dtoMapper, LectureDTOMapper lecturedtoMapper) {
+    public AccountController(MockUserServiceImpl userservice, UserDTOMapper dtoMapper, LectureDTOMapper lecturedtoMapper, ArticleService articleService) {
         this.userservice = userservice;
         this.userdtoMapper=dtoMapper;
         this.lecturedtoMapper = lecturedtoMapper;
+        this.articleService = articleService;
     }
 
     @GetMapping
@@ -44,7 +50,7 @@ public class AccountController {
     }
 
 
-    @GetMapping("/lectures/progress")
+    @GetMapping(value="/lectures/progress")
     public ResponseEntity<?> findProgressCourses(Principal principal, Criteria cri){
         String currentEmail = principal.getName();
         String userId = userservice.getUuidByEmail(currentEmail);
@@ -101,5 +107,35 @@ public class AccountController {
                 .map(lecturedtoMapper::toLectureResponseDTO)
                 .collect(Collectors.toList()));
         return new ResponseEntity<>(map,HttpStatus.OK);
+    }
+
+    @GetMapping("/community/posts")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> getArticleListById(Principal principal,@RequestParam(required = false) Integer cursor,
+                                                @RequestParam(defaultValue="10") Integer amount) throws Exception {
+        HashMap<String, Object> map = new HashMap<>();
+        String currentEmail = principal.getName();
+        String userId = userservice.getUuidByEmail(currentEmail);
+        int total = articleService.getTotalbyId(userId);
+        map.put("total", total);
+        map.put("data", null);
+        if (cursor != null){
+            map.put("currentCursor", cursor);
+        } else {
+            map.put("currentCursor", null);
+        }
+        map.put("next", null);
+        map.put("amount", amount);
+        try{
+            PostCriteria postCriteria = new PostCriteria(userId, cursor, amount);
+            HashMap<String, Object> articleListById = articleService.getArticleListById(postCriteria);
+            map.replace("data", articleListById.get("articleDTOList"));
+            map.replace("currentCursor", cursor);
+            map.replace("next", articleListById.get("next"));
+        } catch (Exception e){
+            log.info(e.getMessage());
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK);
+
     }
 }

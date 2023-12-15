@@ -96,12 +96,12 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYID DESC) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
               FROM
                   REPLY
               WHERE
                   ARTICLEID = #{replyCriteria.Id} AND REPLYID = PARENTID AND REPLYID < #{replyCriteria.cursor}
-              ORDER BY REPLYDATE desc)  A
+              )  A
         WHERE A.RNUM <= #{replyCriteria.amount}
         ORDER BY A.RNUM
         ]]>
@@ -118,12 +118,12 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYID DESC) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
               FROM
                   REPLY
               WHERE
                   ARTICLEID = #{replyCriteria.Id} AND REPLYID = PARENTID
-              ORDER BY REPLYDATE desc)  A
+              )  A
         WHERE A.RNUM <= #{replyCriteria.amount}
         ORDER BY A.RNUM
         ]]>
@@ -140,12 +140,12 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYID DESC) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
               FROM
                   REPLY
               WHERE
                   PARENTID = #{replyCriteria.Id} AND REPLYID != PARENTID AND REPLYID < #{replyCriteria.cursor}
-              ORDER BY REPLYDATE desc)  A
+              )  A
         WHERE A.RNUM <= #{replyCriteria.amount}
         ORDER BY A.RNUM
         ]]>
@@ -162,12 +162,12 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYID DESC) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
               FROM
                   REPLY
               WHERE
                   PARENTID = #{replyCriteria.Id} AND REPLYID != PARENTID
-              ORDER BY REPLYDATE desc)  A
+              )  A
         WHERE A.RNUM <= #{replyCriteria.amount}
         ORDER BY A.RNUM
         ]]>

@@ -96,7 +96,7 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYID) AS rnum
               FROM
                   REPLY
               WHERE
@@ -118,7 +118,7 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYID) AS rnum
               FROM
                   REPLY
               WHERE
@@ -140,7 +140,7 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYID) AS rnum
               FROM
                   REPLY
               WHERE
@@ -162,7 +162,7 @@
                   REPLYERID,
                   REPLYDATE,
                   UPDATEREPLYDATE,
-                  ROW_NUMBER() OVER (ORDER BY REPLYDATE) AS rnum
+                  ROW_NUMBER() OVER (ORDER BY REPLYID) AS rnum
               FROM
                   REPLY
               WHERE
